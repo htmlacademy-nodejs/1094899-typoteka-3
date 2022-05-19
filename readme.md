@@ -1,7 +1,7 @@
 # Личный проект «Типотека» [![Build status][travis-image]][travis-url]
 
 * Студент: [Антон Чуркин](https://up.htmlacademy.ru/nodejs/3/user/1094899).
-* Наставник: `Неизвестно`.
+* Наставник: [Вадим Осюков](https://htmlacademy.ru/profile/id1411353).
 
 ---
 
