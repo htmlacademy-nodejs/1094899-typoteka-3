@@ -5,10 +5,14 @@ const {ExitCode} = require(`../../constants`);
 const {
   getRandomInt,
   shuffle,
+  pickRandomDate,
+  humanizeDate,
 } = require(`../../utils`);
 
 const DEFAULT_COUNT = 1;
-const MAX_COUNT = 1000;
+const TOTAL_MOCK_LIMIT = 1000;
+const PUBLISH_LIMIT_DAY = -90; // 3 месяца назад
+const MAX_ANNOUNCE_COUNT = 5;
 const FILE_NAME = `mocks.json`;
 
 const TITLES = [
@@ -61,31 +65,13 @@ const CATEGORIES = [
   `Железо`,
 ];
 
-const OfferType = {
-  offer: `offer`,
-  sale: `sale`,
-};
-
-const SumRestrict = {
-  min: 1000,
-  max: 100000,
-};
-
-const PictureRestrict = {
-  min: 1,
-  max: 16,
-};
-
-const getPictureFileName = (number) => number > 10 ? `item${number}.jpg` : `item0${number}.jpg`;
-
-const generateOffers = (count) => (
-  Array(count).fill({}).map(() => ({
-    category: [CATEGORIES[getRandomInt(0, CATEGORIES.length - 1)]],
-    description: shuffle(SENTENCES).slice(1, 5).join(` `),
-    picture: getPictureFileName(getRandomInt(PictureRestrict.min, PictureRestrict.max)),
+const generateArticles = (count) => (
+  Array.from({length: count}, () => ({
     title: TITLES[getRandomInt(0, TITLES.length - 1)],
-    type: Object.keys(OfferType)[Math.floor(Math.random() * Object.keys(OfferType).length)],
-    sum: getRandomInt(SumRestrict.min, SumRestrict.max),
+    createdDate: humanizeDate(pickRandomDate(PUBLISH_LIMIT_DAY)),
+    announce: shuffle(ANNOUNCES).slice(1, getRandomInt(1, MAX_ANNOUNCE_COUNT)).join(` `),
+    fullText: shuffle(ANNOUNCES).slice(1, getRandomInt(1, ANNOUNCES.length - 1)).join(` `),
+    category: shuffle(CATEGORIES).slice(1, getRandomInt(1, CATEGORIES.length - 1)),
   }))
 );
 
@@ -95,12 +81,12 @@ module.exports = {
     const [count] = args;
     const countArticle = Number.parseInt(count, 10) || DEFAULT_COUNT;
 
-    if (countArticle > MAX_COUNT) {
+    if (countArticle > TOTAL_MOCK_LIMIT) {
       console.error(`Не больше 1000 публикаций`);
       process.exit(ExitCode.error);
     }
 
-    const content = JSON.stringify(generateOffers(countArticle));
+    const content = JSON.stringify(generateArticles(countArticle));
 
     fs.writeFile(FILE_NAME, content, (err) => {
       if (err) {
