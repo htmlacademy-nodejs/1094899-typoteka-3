@@ -3,7 +3,8 @@
 const chalk = require(`chalk`);
 const http = require(`http`);
 const fs = require(`fs`).promises;
-const {HTTP_CODE} = require(`../../constants`);
+const {HTTP_CODE, Encoding, MIME} = require(`../../constants`);
+const {contentTypeBuilder} = require(`../../utils/contentType`);
 
 const DEFAULT_PORT = 3000;
 const FILE_PATH = `./mocks.json`;
@@ -26,7 +27,7 @@ const buildBodyResponse = (collection) => {
 
 const setNotFoundResponse = (response) => {
   response.writeHead(HTTP_CODE.notFound, {
-    'Content-Type': `text/plain; charset=UTF-8`,
+    'Content-Type': contentTypeBuilder(MIME.plainText, Encoding.utf8),
   });
   response.end(`Not found`);
 };
@@ -36,13 +37,14 @@ const requestHandler = async (request, response) => {
   switch (request.url) {
     case `/`:
       try {
-        const fileContent = await fs.readFile(FILE_PATH, `utf8`);
+        const fileContent = await fs.readFile(FILE_PATH, Encoding.utf8);
         const announces = JSON.parse(fileContent);
-        response.writeHead(HTTP_CODE.ok, {
-          'Content-Type': `text/html; charset=UTF-8`,
-        });
         const announceTitles = announces.map((x) => x.title);
         const bodyResponse = buildBodyResponse(announceTitles);
+
+        response.writeHead(HTTP_CODE.ok, {
+          'Content-Type': contentTypeBuilder(MIME.html, Encoding.utf8),
+        });
         response.end(bodyResponse);
       } catch (err) {
         setNotFoundResponse(response);
