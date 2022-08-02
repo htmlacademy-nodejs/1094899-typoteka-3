@@ -2,13 +2,13 @@
 
 const chalk = require(`chalk`);
 const fs = require(`fs`).promises;
-const {ExitCode} = require(`../../constants`);
+const {ExitCode, Encoding} = require(`../../constants`);
 const {
   getRandomInt,
   shuffle,
   pickRandomDate,
   humanizeDate,
-} = require(`../../utils`);
+} = require(`../../utils/common`);
 
 const DEFAULT_COUNT = 1;
 const TOTAL_MOCK_LIMIT = 1000;
@@ -21,7 +21,7 @@ const FILE_CATEGORIES_PATH = `./data/categories.txt`;
 
 const readContent = async (filePath) => {
   try {
-    const content = await fs.readFile(filePath, `utf8`);
+    const content = await fs.readFile(filePath, Encoding.utf8);
     const collection = content.trim().split(`\n`);
     return collection;
   } catch (err) {

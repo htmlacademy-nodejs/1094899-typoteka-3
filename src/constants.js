@@ -12,3 +12,13 @@ module.exports.ExitCode = {
   error: 1,
   success: 0,
 };
+
+/** @type {Record<string, BufferEncoding} */
+module.exports.Encoding = {
+  utf8: `utf-8`,
+};
+
+module.exports.MIME = {
+  plainText: `text/plain`,
+  html: `text/html`
+};
