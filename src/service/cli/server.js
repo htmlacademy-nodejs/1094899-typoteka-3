@@ -15,7 +15,7 @@ const startServer = (port) => {
 
   app.use(express.json());
 
-  app.get(`/articles`, async (_req, res) => {
+  app.get(`/posts`, async (_req, res) => {
     try {
       const fileContent = await fs.readFile(FILE_PATH, Encoding.utf8);
       const mocks = JSON.parse(fileContent);
