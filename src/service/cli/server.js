@@ -1,12 +1,11 @@
 'use strict';
 
 const chalk = require(`chalk`);
-const fs = require(`fs`).promises;
 const express = require(`express`);
-const {HTTP_CODE, Encoding} = require(`../../constants`);
+const routes = require(`../api`);
+const {HTTP_CODE, API_PREFIX} = require(`../../constants`);
 
 const DEFAULT_PORT = 3000;
-const FILE_PATH = `./mocks.json`;
 
 let app = null;
 
@@ -15,16 +14,7 @@ const startServer = (port) => {
 
   app.use(express.json());
 
-  app.get(`/posts`, async (_req, res) => {
-    try {
-      const fileContent = await fs.readFile(FILE_PATH, Encoding.utf8);
-      const mocks = JSON.parse(fileContent);
-      res.json(mocks);
-    } catch (err) {
-      console.error(chalk.red(`Ошибка: ${err}`));
-      res.send([]);
-    }
-  });
+  app.use(API_PREFIX, routes);
 
   app.use((req, res) => {
     console.error(chalk.red(`Ошибка 404: ${req.method} ${req.originalUrl}`));
