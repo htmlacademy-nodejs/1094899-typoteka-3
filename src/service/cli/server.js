@@ -1,72 +1,42 @@
 'use strict';
 
 const chalk = require(`chalk`);
-const http = require(`http`);
 const fs = require(`fs`).promises;
-const {HTTP_CODE, Encoding, MIME} = require(`../../constants`);
-const {contentTypeBuilder} = require(`../../utils/contentType`);
+const express = require(`express`);
+const {HTTP_CODE, Encoding} = require(`../../constants`);
 
 const DEFAULT_PORT = 3000;
 const FILE_PATH = `./mocks.json`;
 
-const buildBodyResponse = (collection) => {
-  const list = collection.map((x) => `<li>${x}</li>`).join(``);
-
-  return `
-    <!DOCTYPE html>
-    <html lang="ru">
-      <head>
-        <title>From Node with love!</title>
-      </head>
-      <body>
-        <ul>${list}</ul>
-      </body>
-    </html>
-  `;
-};
-
-const setNotFoundResponse = (response) => {
-  response.writeHead(HTTP_CODE.notFound, {
-    'Content-Type': contentTypeBuilder(MIME.plainText, Encoding.utf8),
-  });
-  response.end(`Not found`);
-};
-
-const requestHandler = async (request, response) => {
-
-  switch (request.url) {
-    case `/`:
-      try {
-        const fileContent = await fs.readFile(FILE_PATH, Encoding.utf8);
-        const announces = JSON.parse(fileContent);
-        const announceTitles = announces.map((x) => x.title);
-        const bodyResponse = buildBodyResponse(announceTitles);
-
-        response.writeHead(HTTP_CODE.ok, {
-          'Content-Type': contentTypeBuilder(MIME.html, Encoding.utf8),
-        });
-        response.end(bodyResponse);
-      } catch (err) {
-        setNotFoundResponse(response);
-      }
-      break;
-
-    default:
-      setNotFoundResponse(response);
-  }
-
-};
+let app = null;
 
 const startServer = (port) => {
-  const httpServer = http.createServer(requestHandler);
+  app = express();
 
-  httpServer.listen(port, () => {
-    console.info(chalk.blue(`Принимаю подключения на ${port}`));
+  app.use(express.json());
+
+  app.get(`/posts`, async (_req, res) => {
+    try {
+      const fileContent = await fs.readFile(FILE_PATH, Encoding.utf8);
+      const mocks = JSON.parse(fileContent);
+      res.json(mocks);
+    } catch (err) {
+      console.error(chalk.red(`Ошибка: ${err}`));
+      res.send([]);
+    }
   });
 
-  httpServer.on(`error`, ({message}) => {
-    console.error(chalk.red(`Ошибка: ${message}`));
+  app.use((req, res) => {
+    console.error(chalk.red(`Ошибка 404: ${req.method} ${req.originalUrl}`));
+    res
+      .status(HTTP_CODE.notFound)
+      .send(`Not found`);
   });
+
+  app.listen(
+      DEFAULT_PORT,
+      () => console.info(chalk.blue(`Принимаю подключения на ${port}`))
+  );
 };
 
 module.exports = {
