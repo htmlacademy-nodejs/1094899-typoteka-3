@@ -1,8 +1,8 @@
 'use strict';
 
-const chalk = require(`chalk`);
 const express = require(`express`);
 const routes = require(`../api`);
+const {getLogger} = require(`../lib/logger`);
 const {HTTP_CODE, API_PREFIX} = require(`../../constants`);
 
 const DEFAULT_PORT = 3000;
@@ -10,23 +10,45 @@ const DEFAULT_PORT = 3000;
 let app = null;
 
 const startServer = (port) => {
+  const logger = getLogger({name: `api`});
   app = express();
 
   app.use(express.json());
 
+  app.use((req, res, next) => {
+    logger.debug(`Request on route ${req.url}`);
+    res.on(`finish`, () => {
+      logger.info(`Response status code ${res.statusCode}`);
+    });
+    next();
+  });
+
   app.use(API_PREFIX, routes);
 
   app.use((req, res) => {
-    console.error(chalk.red(`Ошибка 404: ${req.method} ${req.originalUrl}`));
+    logger.error(`Ошибка 404: ${req.method} ${req.originalUrl}`);
     res
       .status(HTTP_CODE.notFound)
       .send(`Not found`);
   });
 
-  app.listen(
-      DEFAULT_PORT,
-      () => console.info(chalk.blue(`Принимаю подключения на ${port}`))
-  );
+  app.use((err, _req, _res, _next) => {
+    logger.error(`An error occured on processing request: ${err.message}`);
+  });
+
+  try {
+    app.listen(port, (err) => {
+      if (err) {
+        return logger.error(`An error occured on server creation: ${err.message}`);
+      }
+
+      return logger.info(`Принимаю подключения на ${port}`);
+    });
+
+  } catch (err) {
+    logger.error(`An error occured: ${err.message}`);
+    process.exit(1);
+  }
 };
 
 module.exports = {
