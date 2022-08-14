@@ -88,7 +88,7 @@ describe(`API returns article based on search query`, () => {
 
   test(`Status code 200`, () => expect(response.statusCode).toBe(HTTP_CODE.ok));
   test(`1 article found`, () => expect(response.body.length).toBe(1));
-  test(`Offer has correct id`, () => expect(response.body[0].id).toBe(`ABe9Y6`));
+  test(`Article has correct id`, () => expect(response.body[0].id).toBe(`ABe9Y6`));
 });
 
 test(`API returns 400 when query string is absent`,
