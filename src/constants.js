@@ -27,4 +27,7 @@ module.exports.MIME = {
   html: `text/html`
 };
 
-
+module.exports.Env = {
+  DEVELOPMENT: `development`,
+  PRODUCTION: `production`
+};
