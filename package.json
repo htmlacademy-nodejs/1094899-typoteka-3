@@ -7,10 +7,12 @@
     "test": "npm run eslint && npm run jest",
     "jest": "jest",
     "eslint": "eslint --ext .js src/",
+    "start": "cross-env NODE_ENV=production node ./src/service/service.js",
     "start-api-server": "cross-env NODE_ENV=production node ./src/service/service.js --server 3000",
-    "start-api-server::debug": "cross-env NODE_ENV=development nodemon ./src/service/service.js --server 3000",
+    "start-api-server:dev": "cross-env NODE_ENV=development nodemon ./src/service/service.js --server 3000",
     "start-front-server": "node ./src/express/express.js",
-    "start-front-server:dev": "nodemon ./src/express/express.js"
+    "start-front-server:dev": "nodemon ./src/express/express.js",
+    "fix-windows-charset": "chcp 65001"
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,7 @@
     "supertest": "6.2.4"
   },
   "dependencies": {
+    "axios": "0.27.2",
     "chalk": "4.1.2",
     "cross-env": "7.0.3",
     "dayjs": "1.11.2",
