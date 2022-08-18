@@ -17,7 +17,7 @@ const {
 let apiRouter;
 
 const getApiRouter = async () => {
-  if (!apiRouter) {
+  if (apiRouter) {
     return apiRouter;
   }
 

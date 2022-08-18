@@ -3,7 +3,7 @@
 const dayjs = require(`dayjs`);
 const customParseFormat = require(`dayjs/plugin/customParseFormat`);
 const {DATE_PATTERN} = require(`../constants`);
-const { getRandomInt} = require(`./common`);
+const {getRandomInt} = require(`./common`);
 dayjs.extend(customParseFormat);
 
 module.exports.pickRandomDate = (dayOffset) => {

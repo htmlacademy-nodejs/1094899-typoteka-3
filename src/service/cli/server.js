@@ -9,7 +9,7 @@ const DEFAULT_PORT = 3000;
 
 let app = null;
 
-const startServer = (port) => {
+const startServer = async (port) => {
   const logger = getLogger({name: `api`});
   app = express();
 
@@ -23,7 +23,7 @@ const startServer = (port) => {
     next();
   });
 
-  const routes = getApiRouter();
+  const routes = await getApiRouter();
   app.use(API_PREFIX, routes);
 
   app.use((req, res) => {
@@ -54,9 +54,9 @@ const startServer = (port) => {
 
 module.exports = {
   name: `--server`,
-  run(args) {
+  async run(args) {
     const [askedPort] = args;
     const port = Number.parseInt(askedPort, 10) || DEFAULT_PORT;
-    startServer(port);
+    await startServer(port);
   }
 };
