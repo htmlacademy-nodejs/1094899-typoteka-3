@@ -31,3 +31,9 @@ module.exports.Env = {
   DEVELOPMENT: `development`,
   PRODUCTION: `production`
 };
+
+module.exports.DATE_PATTERN = {
+  default: `YYYY-MM-DD HH:mm:ss`,
+  humanReadable: `DD.MM.YYYY, HH:mm`,
+  robotReadable: `YYYY-MM-DDTHH:mm`,
+};
