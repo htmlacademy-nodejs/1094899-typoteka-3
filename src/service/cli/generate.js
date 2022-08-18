@@ -63,14 +63,14 @@ module.exports = {
     }
 
     try {
-      const collections = await Promise.all([
+      const [titles, categories, sentences, comments] = await Promise.all([
         await readContent(FILE_TITLES_PATH),
         await readContent(FILE_CATEGORIES_PATH),
         await readContent(FILE_SENTENCES_PATH),
         await readContent(FILE_COMMENTS_PATH),
       ]);
 
-      const content = JSON.stringify(generateArticles(countArticle, collections[0], collections[1], collections[2], collections[3]));
+      const content = JSON.stringify(generateArticles(countArticle, titles, categories, sentences, comments));
       await fs.writeFile(FILE_NAME, content);
       console.log(chalk.green(`Operation success. File created.`));
     } catch (err) {
