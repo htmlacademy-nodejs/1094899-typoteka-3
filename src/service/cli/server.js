@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require(`express`);
-const routes = require(`../api`);
+const {getApiRouter} = require(`../api`);
 const {getLogger} = require(`../lib/logger`);
 const {HTTP_CODE, API_PREFIX} = require(`../../constants`);
 
@@ -23,6 +23,7 @@ const startServer = (port) => {
     next();
   });
 
+  const routes = getApiRouter();
   app.use(API_PREFIX, routes);
 
   app.use((req, res) => {

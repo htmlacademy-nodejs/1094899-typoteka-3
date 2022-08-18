@@ -14,14 +14,21 @@ const {
   CommentService,
 } = require(`../data-service`);
 
-const app = new Router();
+let apiRouter;
 
-(async () => {
+const getApiRouter = async () => {
+  if (!apiRouter) {
+    return apiRouter;
+  }
+
+  apiRouter = new Router();
   const mockData = await getMockData();
 
-  category(app, new CategoryService(mockData));
-  search(app, new SearchService(mockData));
-  article(app, new ArticleService(mockData), new CommentService());
-})();
+  category(apiRouter, new CategoryService(mockData));
+  search(apiRouter, new SearchService(mockData));
+  article(apiRouter, new ArticleService(mockData), new CommentService());
 
-module.exports = app;
+  return apiRouter;
+};
+
+module.exports = {getApiRouter};

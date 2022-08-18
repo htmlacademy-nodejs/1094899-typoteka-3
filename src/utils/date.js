@@ -3,6 +3,7 @@
 const dayjs = require(`dayjs`);
 const customParseFormat = require(`dayjs/plugin/customParseFormat`);
 const {DATE_PATTERN} = require(`../constants`);
+const { getRandomInt} = require(`./common`);
 dayjs.extend(customParseFormat);
 
 module.exports.pickRandomDate = (dayOffset) => {
@@ -11,14 +12,14 @@ module.exports.pickRandomDate = (dayOffset) => {
   }
 
   const randomDayOffset = dayOffset > 0
-    ? exports.getRandomInt(0, dayOffset)
-    : exports.getRandomInt(dayOffset, 0);
+    ? getRandomInt(0, dayOffset)
+    : getRandomInt(dayOffset, 0);
 
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() + randomDayOffset);
-  currentDate.setHours(exports.getRandomInt(0, 23));
-  currentDate.setMinutes(exports.getRandomInt(0, 59));
-  currentDate.setSeconds(exports.getRandomInt(0, 59));
+  currentDate.setHours(getRandomInt(0, 23));
+  currentDate.setMinutes(getRandomInt(0, 59));
+  currentDate.setSeconds(getRandomInt(0, 59));
 
   return new Date(currentDate);
 };

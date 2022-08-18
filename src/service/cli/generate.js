@@ -34,6 +34,8 @@ const generateComments = (count, comments) => (
   Array.from({length: count}, () => ({
     id: nanoid(MAX_ID_LENGTH),
     text: shuffle(comments)[getRandomInt(0, comments.length - 1)],
+    author: `John ${nanoid(MAX_ID_LENGTH)}`,
+    createdDate: humanizeDate(pickRandomDate(PUBLISH_LIMIT_DAY)),
   }))
 );
 
@@ -72,7 +74,7 @@ module.exports = {
       await fs.writeFile(FILE_NAME, content);
       console.log(chalk.green(`Operation success. File created.`));
     } catch (err) {
-      console.error(chalk.red(`Can't write data to file...`));
+      console.error(chalk.red(`Can't write data to file: ${err}`));
       process.exit(ExitCode.error);
     }
   }
