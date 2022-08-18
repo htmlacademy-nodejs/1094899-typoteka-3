@@ -4,12 +4,8 @@ const chalk = require(`chalk`);
 const fs = require(`fs`).promises;
 const {nanoid} = require(`nanoid`);
 const {ExitCode, Encoding} = require(`../../constants`);
-const {
-  getRandomInt,
-  shuffle,
-  pickRandomDate,
-  humanizeDate,
-} = require(`../../utils/common`);
+const {getRandomInt, shuffle} = require(`../../utils/common`);
+const {pickRandomDate, humanizeDate} = require(`../../utils/date`);
 
 const DEFAULT_COUNT = 1;
 const TOTAL_MOCK_LIMIT = 1000;
