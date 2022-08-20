@@ -36,4 +36,6 @@ module.exports.DATE_PATTERN = {
   default: `YYYY-MM-DD HH:mm:ss`,
   humanReadable: `DD.MM.YYYY, HH:mm`,
   robotReadable: `YYYY-MM-DDTHH:mm`,
+  dateReverse: `YYYY-MM-DD`,
+  dateOnly: `DD.MM.YYYY`,
 };
