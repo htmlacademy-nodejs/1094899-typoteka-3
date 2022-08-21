@@ -4,12 +4,8 @@ const chalk = require(`chalk`);
 const fs = require(`fs`).promises;
 const {nanoid} = require(`nanoid`);
 const {ExitCode, Encoding} = require(`../../constants`);
-const {
-  getRandomInt,
-  shuffle,
-  pickRandomDate,
-  humanizeDate,
-} = require(`../../utils/common`);
+const {getRandomInt, shuffle} = require(`../../utils/common`);
+const {pickRandomDate, humanizeDate} = require(`../../utils/date`);
 
 const DEFAULT_COUNT = 1;
 const TOTAL_MOCK_LIMIT = 1000;
@@ -38,6 +34,8 @@ const generateComments = (count, comments) => (
   Array.from({length: count}, () => ({
     id: nanoid(MAX_ID_LENGTH),
     text: shuffle(comments)[getRandomInt(0, comments.length - 1)],
+    author: `John ${nanoid(MAX_ID_LENGTH)}`,
+    createdDate: humanizeDate(pickRandomDate(PUBLISH_LIMIT_DAY)),
   }))
 );
 
@@ -65,18 +63,18 @@ module.exports = {
     }
 
     try {
-      const collections = await Promise.all([
+      const [titles, categories, sentences, comments] = await Promise.all([
         await readContent(FILE_TITLES_PATH),
         await readContent(FILE_CATEGORIES_PATH),
         await readContent(FILE_SENTENCES_PATH),
         await readContent(FILE_COMMENTS_PATH),
       ]);
 
-      const content = JSON.stringify(generateArticles(countArticle, collections[0], collections[1], collections[2], collections[3]));
+      const content = JSON.stringify(generateArticles(countArticle, titles, categories, sentences, comments));
       await fs.writeFile(FILE_NAME, content);
       console.log(chalk.green(`Operation success. File created.`));
     } catch (err) {
-      console.error(chalk.red(`Can't write data to file...`));
+      console.error(chalk.red(`Can't write data to file: ${err}`));
       process.exit(ExitCode.error);
     }
   }
