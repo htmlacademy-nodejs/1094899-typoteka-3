@@ -12,7 +12,9 @@
     "start-api-server:dev": "cross-env NODE_ENV=development nodemon ./src/service/service.js --server 3000",
     "start-front-server": "cross-env NODE_ENV=production node ./src/express/express.js",
     "start-front-server:dev": "cross-env NODE_ENV=development nodemon ./src/express/express.js",
-    "fix-windows-charset": "chcp 65001"
+    "fix-windows-charset": "chcp 65001",
+    "start-db-docker": "docker compose --project-name=\"academy-pgsql\" -f ./docker/docker-compose.yml up --detach",
+    "stop-db-docker": "docker compose --project-name=\"academy-pgsql\" down"
   },
   "repository": {
     "type": "git",
