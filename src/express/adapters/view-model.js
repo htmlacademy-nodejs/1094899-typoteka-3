@@ -10,7 +10,7 @@ const commentConverter = (comment) =>
     createdDateRobot: parseDate(comment.createdDate, DATE_PATTERN.robotReadable)
   }, comment));
 
-module.exports.convertViewArticle = (article) => {
+const convertViewArticle = (article) => {
   const viewArticle = Object.assign({
     createdDateHuman: parseDate(article.createdDate, DATE_PATTERN.humanReadable),
     createdDateRobot: parseDate(article.createdDate, DATE_PATTERN.robotReadable),
@@ -25,9 +25,9 @@ module.exports.convertViewArticle = (article) => {
   return viewArticle;
 };
 
-module.exports.convertViewArticles = (articles) => articles.map(exports.convertViewArticle);
+const convertViewArticles = (articles) => articles.map(exports.convertViewArticle);
 
-module.exports.parseViewArticle = (body, file) => {
+const parseViewArticle = (body, file) => {
   const articleData = {
     image: file ? file.filename : ``,
     createdDate: parseDate(body.date, DATE_PATTERN.default, DATE_PATTERN.dateReverse),
@@ -38,4 +38,10 @@ module.exports.parseViewArticle = (body, file) => {
   };
 
   return articleData;
+};
+
+module.exports = {
+  convertViewArticle,
+  convertViewArticles,
+  parseViewArticle
 };

@@ -64,10 +64,10 @@ module.exports = {
 
     try {
       const [titles, categories, sentences, comments] = await Promise.all([
-        await readContent(FILE_TITLES_PATH),
-        await readContent(FILE_CATEGORIES_PATH),
-        await readContent(FILE_SENTENCES_PATH),
-        await readContent(FILE_COMMENTS_PATH),
+        readContent(FILE_TITLES_PATH),
+        readContent(FILE_CATEGORIES_PATH),
+        readContent(FILE_SENTENCES_PATH),
+        readContent(FILE_COMMENTS_PATH),
       ]);
 
       const content = JSON.stringify(generateArticles(countArticle, titles, categories, sentences, comments));
