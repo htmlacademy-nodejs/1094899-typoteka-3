@@ -3,12 +3,12 @@ services:
   postgres:
     image: postgres:13.3
     environment:
-      POSTGRES_DB: "academydb"
-      POSTGRES_USER: "user1"
-      POSTGRES_PASSWORD: "pgpwd1"
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:5432"
 volumes:
   pgdata:

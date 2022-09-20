@@ -7,13 +7,13 @@
     "test": "npm run eslint && npm run jest",
     "jest": "jest",
     "eslint": "eslint --ext .js src/",
-    "start": "cross-env NODE_ENV=production node ./src/service/service.js",
-    "start-api-server": "cross-env NODE_ENV=production node ./src/service/service.js --server 3000",
-    "start-api-server:dev": "cross-env NODE_ENV=development nodemon ./src/service/service.js --server 3000",
+    "start": "cross-env NODE_ENV=production node -r dotenv/config ./src/service/service.js",
+    "start-api-server": "cross-env NODE_ENV=production node -r dotenv/config ./src/service/service.js --server 3000",
+    "start-api-server:dev": "cross-env NODE_ENV=development nodemon -r dotenv/config ./src/service/service.js --server 3000",
     "start-front-server": "cross-env NODE_ENV=production node ./src/express/express.js",
     "start-front-server:dev": "cross-env NODE_ENV=development nodemon ./src/express/express.js",
     "fix-windows-charset": "chcp 65001",
-    "start-db-docker": "docker compose --project-name=\"academy-pgsql\" -f ./docker/docker-compose.yml up --detach",
+    "start-db-docker": "docker compose --project-name=\"academy-pgsql\" -f ./docker/docker-compose.yml --env-file ./.env up --detach",
     "stop-db-docker": "docker compose --project-name=\"academy-pgsql\" down"
   },
   "repository": {
@@ -45,10 +45,13 @@
     "chalk": "4.1.2",
     "cross-env": "7.0.3",
     "dayjs": "1.11.2",
+    "dotenv": "16.0.2",
     "express": "4.18.1",
     "multer": "1.4.5-lts.1",
     "nanoid": "3.3.4",
+    "pg": "8.8.0",
     "pino": "8.4.1",
-    "pug": "3.0.2"
+    "pug": "3.0.2",
+    "sequelize": "6.23.0"
   }
 }
