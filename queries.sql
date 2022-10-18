@@ -8,7 +8,7 @@ from categories c;
 select
 	ac.category_id,
 	c.name
-from article_categories ac
+from article_category ac
   inner join categories c on ac.category_id = c.id
 group by ac.category_id, c.name;
 
@@ -18,7 +18,7 @@ select
 	c.name,
 	count(a.id)
 from categories c
-  left join article_categories ac on ac.category_id = c.id
+  left join article_category ac on ac.category_id = c.id
   left join articles a on ac.article_id = a.id
 group by c.id, c.name;
 
@@ -34,8 +34,8 @@ select
   COUNT(comments.id) AS comments_count,
   STRING_AGG(DISTINCT categories.name, ', ') AS category_list
 from articles a
-  JOIN article_categories ON a.id = article_categories.article_id
-  JOIN categories ON article_categories.category_id = categories.id
+  JOIN article_category ON a.id = article_category.article_id
+  JOIN categories ON article_category.category_id = categories.id
   LEFT JOIN comments ON comments.article_id = a.id
   JOIN users u ON u.id = a.user_id
 group by a.id, u.id
@@ -50,8 +50,8 @@ SELECT
   users.last_name,
   users.email
 FROM articles
-  JOIN article_categories ON articles.id = article_categories.article_id
-  JOIN categories ON article_categories.category_id = categories.id
+  JOIN article_category ON articles.id = article_category.article_id
+  JOIN categories ON article_category.category_id = categories.id
   LEFT JOIN comments ON comments.article_id = articles.id
   JOIN users ON users.id = articles.user_id
 WHERE articles.id = 1

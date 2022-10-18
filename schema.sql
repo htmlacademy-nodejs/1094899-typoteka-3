@@ -33,7 +33,7 @@ CREATE TABLE comments(
   FOREIGN KEY (article_id) REFERENCES articles(id)
 );
 
-CREATE TABLE article_categories(
+CREATE TABLE article_category(
   article_id integer NOT NULL,
   category_id integer NOT NULL,
   PRIMARY KEY (article_id, category_id),
