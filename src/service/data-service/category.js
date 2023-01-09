@@ -6,6 +6,7 @@ const Aliase = require(`../models/aliase`);
 class CategoryService {
   constructor(sequelize) {
     this._Category = sequelize.models.Category;
+    this._ArticleCategory = sequelize.models.ArticleCategory;
   }
 
   async findAll(needCount) {

@@ -12,15 +12,19 @@ module.exports = (app, articleService, commentService) => {
   app.use(`/articles`, route);
 
   /** ресурс возвращает список публикаций */
-  route.get(`/`, async (_req, res) => {
-    const articles = await articleService.findAll();
+  route.get(`/`, async (req, res) => {
+
+    const {comments} = req.query;
+    const articles = await articleService.findAll(comments);
     res.status(HTTP_CODE.ok).json(articles);
   });
 
   /** возвращает полную информацию о публикации */
   route.get(`/:articleId`, async (req, res) => {
     const {articleId} = req.params;
-    const article = await articleService.findOne(articleId);
+    const {comments} = req.query;
+
+    const article = await articleService.findOne(articleId, comments);
 
     if (!article) {
       return res.status(HTTP_CODE.notFound)

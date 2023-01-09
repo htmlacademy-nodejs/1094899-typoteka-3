@@ -5,10 +5,18 @@ const privateRouter = new Router();
 const api = require(`../api`).getAPI();
 const {convertViewArticles} = require(`../adapters/view-model`);
 
-privateRouter.get(`/`, (_req, res) => res.render(`my-posts`));
-privateRouter.get(`/categories`, (_req, res) => res.render(`all-categories`));
-privateRouter.get(`/comments`, async (_req, res) => {
+privateRouter.get(`/`, async (_req, res) => {
   const articles = await api.getArticles();
+  res.render(`my-posts`, {articles});
+});
+
+privateRouter.get(`/categories`, async (_req, res) => {
+  const categories = await api.getCategories(true);
+  res.render(`all-categories`, {categories});
+});
+
+privateRouter.get(`/comments`, async (_req, res) => {
+  const articles = await api.getArticles(true);
   res.render(`comments`, {
     articles: convertViewArticles(articles.slice(0, 3))
   });

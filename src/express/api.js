@@ -19,24 +19,24 @@ class API {
     return response.data;
   }
 
-  getArticles() {
-    return this._load(`/articles`);
+  getArticles(comments = false) {
+    return this._load(`/articles`, {params: {comments}});
   }
 
-  getArticle(id) {
-    return this._load(`/articles/${id}`);
+  getArticle(id, comments = false) {
+    return this._load(`/articles/${id}`, {params: {comments}});
   }
 
   search(query) {
     return this._load(`/search`, {params: {query}});
   }
 
-  async getCategories() {
-    return await this._load(`/category`);
+  getCategories(count = false) {
+    return this._load(`/category`, {params: {count}});
   }
 
-  async createArticle(data) {
-    return await this._load(`/articles`, {
+  createArticle(data) {
+    return this._load(`/articles`, {
       method: `POST`,
       data
     });
