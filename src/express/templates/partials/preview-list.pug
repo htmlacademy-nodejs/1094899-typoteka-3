@@ -2,9 +2,9 @@ ul.preview__list
   each article of articles
     li.preview__item
       ul.preview__breadcrumbs(style='flex-wrap: wrap')
-        each singleCategory of article.category
+        each singleCategory of article.categories
           li.preview__breadcrumbs-item
-            a.preview__breadcrumbs-link(href='#') #{singleCategory}
+            a.preview__breadcrumbs-link(href=`/category/${singleCategory.id}`) #{singleCategory.name}
       if article.image
         .preview__background
           img.preview__background-image(src=article.image width='460' height='240' style='width: 100%; height: 100%' alt=article.title)
@@ -12,8 +12,8 @@ ul.preview__list
       h3.preview__name
         a.preview__name-link(href=`/articles/${article.id}`) #{article.title}
       p.preview__text #{article.announce}
-      a.preview__comment(href=`/articles/${article.id}#comments`)
+      a.preview__comment(href=`/articles/${article.id}/comments`)
         | Комментарии
         span.preview__cloud
         |
-        b.preview__comment-count #{article.comments.length}
+        b.preview__comment-count #{article.comments ? article.comments.length : 0}

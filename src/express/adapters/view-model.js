@@ -4,28 +4,42 @@ const {DATE_PATTERN} = require(`../../constants`);
 const {parseDate} = require(`../../utils/date`);
 const {ensureArray} = require(`../../utils/common`);
 
-const commentConverter = (comment) =>
-  (Object.assign({
-    createdDateHuman: parseDate(comment.createdDate, DATE_PATTERN.humanReadable),
-    createdDateRobot: parseDate(comment.createdDate, DATE_PATTERN.robotReadable)
-  }, comment));
+/* Добавляет количество статей в категории */
+const enrichCategoryCount = (partialCategories, totalCategories) => {
+  const categories = partialCategories.slice();
+  categories.forEach((partialCat) => {
+    const index = totalCategories.findIndex((richCat) => richCat.id === partialCat.id);
+    partialCat.count = index === -1 ? 0 : totalCategories[index].count;
+  });
+  return categories;
+};
 
-const convertViewArticle = (article) => {
-  const viewArticle = Object.assign({
-    createdDateHuman: parseDate(article.createdDate, DATE_PATTERN.humanReadable),
-    createdDateRobot: parseDate(article.createdDate, DATE_PATTERN.robotReadable),
-    createdDateReverse: parseDate(article.createdDate, DATE_PATTERN.dateReverse),
+const commentConverter = (comment) =>
+  (Object.assign(comment, {
+    createdDateHuman: parseDate(comment.createdAt, DATE_PATTERN.humanReadable),
+    createdDateRobot: parseDate(comment.createdAt, DATE_PATTERN.robotReadable)
+  }));
+
+const convertViewArticle = (article, totalCategories) => {
+  const viewArticle = Object.assign(article, {
+    createdDateHuman: parseDate(article.createdAt, DATE_PATTERN.humanReadable),
+    createdDateRobot: parseDate(article.createdAt, DATE_PATTERN.robotReadable),
+    createdDateReverse: parseDate(article.createdAt, DATE_PATTERN.dateReverse),
     comments: article.comments.map(commentConverter)
-  }, article);
+  });
 
   if (article.image) {
     viewArticle.image = `img/${article.image}`;
   }
 
+  if (totalCategories) {
+    viewArticle.categories = enrichCategoryCount(viewArticle.categories, totalCategories);
+  }
+
   return viewArticle;
 };
 
-const convertViewArticles = (articles) => articles.map(exports.convertViewArticle);
+const convertViewArticles = (articles) => articles.map((singleArticle) => convertViewArticle(singleArticle));
 
 const parseViewArticle = (body, file) => {
   const articleData = {
@@ -43,5 +57,6 @@ const parseViewArticle = (body, file) => {
 module.exports = {
   convertViewArticle,
   convertViewArticles,
-  parseViewArticle
+  parseViewArticle,
+  enrichCategoryCount
 };
