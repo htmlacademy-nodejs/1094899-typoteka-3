@@ -12,15 +12,15 @@ module.exports = (app, articleService, commentService) => {
   app.use(`/articles`, route);
 
   /** ресурс возвращает список публикаций */
-  route.get(`/`, (_req, res) => {
-    const articles = articleService.findAll();
+  route.get(`/`, async (_req, res) => {
+    const articles = await articleService.findAll();
     res.status(HTTP_CODE.ok).json(articles);
   });
 
   /** возвращает полную информацию о публикации */
-  route.get(`/:articleId`, (req, res) => {
+  route.get(`/:articleId`, async (req, res) => {
     const {articleId} = req.params;
-    const article = articleService.findOne(articleId);
+    const article = await articleService.findOne(articleId);
 
     if (!article) {
       return res.status(HTTP_CODE.notFound)
@@ -32,33 +32,33 @@ module.exports = (app, articleService, commentService) => {
   });
 
   /** создаёт новую публикацию */
-  route.post(`/`, articleValidator, (req, res) => {
-    const article = articleService.create(req.body);
+  route.post(`/`, articleValidator, async (req, res) => {
+    const article = await articleService.create(req.body);
 
     return res.status(HTTP_CODE.created)
       .json(article);
   });
 
   /** редактирует определённую публикацию */
-  route.put(`/:articleId`, articleValidator, (req, res) => {
+  route.put(`/:articleId`, articleValidator, async (req, res) => {
     const {articleId} = req.params;
-    const existArticle = articleService.findOne(articleId);
+    const existArticle = await articleService.findOne(articleId);
 
     if (!existArticle) {
       return res.status(HTTP_CODE.notFound)
         .send(`Not found with ${articleId}`);
     }
 
-    const updatedArticle = articleService.update(articleId, req.body);
+    const updatedArticle = await articleService.update(articleId, req.body);
 
     return res.status(HTTP_CODE.ok)
       .json(updatedArticle);
   });
 
   /** удаляет определённую публикацию */
-  route.delete(`/:articleId`, (req, res) => {
+  route.delete(`/:articleId`, async (req, res) => {
     const {articleId} = req.params;
-    const article = articleService.drop(articleId);
+    const article = await articleService.drop(articleId);
 
     if (!article) {
       return res.status(HTTP_CODE.notFound)
@@ -70,20 +70,19 @@ module.exports = (app, articleService, commentService) => {
   });
 
   /** возвращает список комментариев определённой публикации */
-  route.get(`/:articleId/comments`, articleExist(articleService), (req, res) => {
+  route.get(`/:articleId/comments`, articleExist(articleService), async (req, res) => {
     const {article} = res.locals;
-    const comments = commentService.findAll(article);
+    const comments = await commentService.findAll(article.id);
 
     res.status(HTTP_CODE.ok)
       .json(comments);
-
   });
 
   /** удаляет из определённой публикации комментарий */
-  route.delete(`/:articleId/comments/:commentId`, articleExist(articleService), (req, res) => {
+  route.delete(`/:articleId/comments/:commentId`, articleExist(articleService), async (req, res) => {
     const {article} = res.locals;
     const {commentId} = req.params;
-    const deletedComment = commentService.drop(article, commentId);
+    const deletedComment = await commentService.drop(article, commentId);
 
     if (!deletedComment) {
       return res.status(HTTP_CODE.notFound)
@@ -95,9 +94,9 @@ module.exports = (app, articleService, commentService) => {
   });
 
   /** создаёт новый комментарий */
-  route.post(`/:articleId/comments`, [articleExist(articleService), commentValidator], (req, res) => {
+  route.post(`/:articleId/comments`, [articleExist(articleService), commentValidator], async (req, res) => {
     const {article} = res.locals;
-    const comment = commentService.create(article, req.body);
+    const comment = await commentService.create(article, req.body);
 
     return res.status(HTTP_CODE.created)
       .json(comment);

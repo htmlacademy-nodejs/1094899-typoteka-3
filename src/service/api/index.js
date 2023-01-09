@@ -16,7 +16,7 @@ const {
 
 let apiRouter;
 
-const getApiRouter = async () => {
+const getApiRouter = () => {
   if (apiRouter) {
     return apiRouter;
   }

@@ -7,14 +7,14 @@ module.exports = (app, service) => {
   const route = new Router();
   app.use(`/search`, route);
 
-  route.get(`/`, (req, res) => {
+  route.get(`/`, async (req, res) => {
     const {query = ``} = req.query;
     if (!query) {
       res.status(HTTP_CODE.clientError).json([]);
       return;
     }
 
-    const searchResults = service.findAll(query);
+    const searchResults = await service.findAll(query);
     const searchStatus = searchResults.length > 0 ? HTTP_CODE.ok : HTTP_CODE.notFound;
 
     res.status(searchStatus)
