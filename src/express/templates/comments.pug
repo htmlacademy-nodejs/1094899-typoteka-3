@@ -14,5 +14,7 @@ block content
                 time.publication__item-time(datetime=comment.createdDateRobot) #{createdDateHuman}
               a.publication__item-text(href=`/articles/${article.id}`) #{article.title}
               p.publication__text-strong #{comment.text}
-              button.publication__button.button.button--close-item(type='button')
-                span.visually-hidden Закрыть строку списка
+              form(action='/my/comments/delete' method='POST')
+                input(type='hidden' name=`id` value=comment.id)
+                button.publication__button.button.button--close-item(type='submit')
+                  span.visually-hidden Удалить комментарий

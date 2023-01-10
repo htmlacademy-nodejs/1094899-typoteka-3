@@ -61,13 +61,14 @@ articleRouter.post(`/add`, upload.single(`upload`), async (req, res) => {
 articleRouter.get(`/category/:id`, async (req, res) => {
   const {id: categoryId} = req.params;
   const [articles, categories] = await Promise.all([
-    api.getArticles(true),
+    api.getArticles(true, categoryId),
     api.getCategories(true)
   ]);
-  const filteredArticle = articles.filter((x)=> x.categoryId === categoryId);
+
   res.render(`articles-by-category`, {
-    articles: convertViewArticles(filteredArticle),
-    categories
+    articles: convertViewArticles(articles),
+    categories,
+    categoryId
   });
 });
 

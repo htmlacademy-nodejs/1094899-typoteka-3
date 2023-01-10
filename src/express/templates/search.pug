@@ -8,7 +8,7 @@ block content
         .search.search-page__form
           form(action='/search' method='get' autocomplete='off')
             label
-              input(type='text' placeholder='Что ищем?' value=`${query || 'Путешествия'}` name='query')
+              input(type='text' placeholder='Что ищем?' value=query name='query')
             button.search__button.button.button--transparent(type='submit') Найти
         if (results && results.length === 0)
           div(style='display: flex; flex-direction: column; align-items: center;')

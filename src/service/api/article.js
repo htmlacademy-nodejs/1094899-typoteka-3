@@ -13,9 +13,9 @@ module.exports = (app, articleService, commentService) => {
 
   /** ресурс возвращает список публикаций */
   route.get(`/`, async (req, res) => {
-
+    const {categoryId} = req.query;
     const {comments} = req.query;
-    const articles = await articleService.findAll(comments);
+    const articles = await articleService.findAll(categoryId, comments);
     res.status(HTTP_CODE.ok).json(articles);
   });
 
@@ -38,7 +38,6 @@ module.exports = (app, articleService, commentService) => {
   /** создаёт новую публикацию */
   route.post(`/`, articleValidator, async (req, res) => {
     const article = await articleService.create(req.body);
-
     return res.status(HTTP_CODE.created)
       .json(article);
   });

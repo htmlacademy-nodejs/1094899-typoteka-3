@@ -19,8 +19,8 @@ class API {
     return response.data;
   }
 
-  getArticles(comments = false) {
-    return this._load(`/articles`, {params: {comments}});
+  getArticles(comments = false, categoryId) {
+    return this._load(`/articles`, {params: {comments, categoryId}});
   }
 
   getArticle(id, comments = false) {

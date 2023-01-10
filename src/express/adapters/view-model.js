@@ -25,7 +25,7 @@ const convertViewArticle = (article, totalCategories) => {
     createdDateHuman: parseDate(article.createdAt, DATE_PATTERN.humanReadable),
     createdDateRobot: parseDate(article.createdAt, DATE_PATTERN.robotReadable),
     createdDateReverse: parseDate(article.createdAt, DATE_PATTERN.dateReverse),
-    comments: article.comments.map(commentConverter)
+    comments: article.comments ? article.comments.map(commentConverter) : []
   });
 
   if (article.image) {
@@ -44,11 +44,11 @@ const convertViewArticles = (articles) => articles.map((singleArticle) => conver
 const parseViewArticle = (body, file) => {
   const articleData = {
     image: file ? file.filename : ``,
-    createdDate: parseDate(body.date, DATE_PATTERN.default, DATE_PATTERN.dateReverse),
+    createdAt: parseDate(body.date, DATE_PATTERN.default, DATE_PATTERN.dateReverse),
     announce: body.announcement,
-    fullText: body[`full-text`],
+    text: body[`full-text`],
     title: body.title,
-    category: ensureArray(body.category),
+    categories: ensureArray(body.category),
   };
 
   return articleData;

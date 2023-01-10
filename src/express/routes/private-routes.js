@@ -7,7 +7,9 @@ const {convertViewArticles} = require(`../adapters/view-model`);
 
 privateRouter.get(`/`, async (_req, res) => {
   const articles = await api.getArticles();
-  res.render(`my-posts`, {articles});
+  res.render(`my-posts`, {
+    articles: convertViewArticles(articles)
+  });
 });
 
 privateRouter.get(`/categories`, async (_req, res) => {

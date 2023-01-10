@@ -1,3 +1,4 @@
+/* eslint-disable spaced-comment */
 'use strict';
 
 const Aliase = require(`../models/aliase`);
@@ -22,8 +23,11 @@ class ArticleService {
     return !!deletedRows;
   }
 
-  async findAll(needComments) {
-    const include = [Aliase.CATEGORIES];
+  async findAll(categoryId, needComments) {
+    const include = categoryId
+      ? [{model: this._Category, as: Aliase.CATEGORIES, where: {id: categoryId}}]
+      : [Aliase.CATEGORIES];
+
     if (needComments) {
       include.push(Aliase.COMMENTS);
     }
@@ -32,7 +36,7 @@ class ArticleService {
       include,
       order: [
         [`createdAt`, `DESC`]
-      ]
+      ],
     });
     return articles.map((item) => item.get());
   }
