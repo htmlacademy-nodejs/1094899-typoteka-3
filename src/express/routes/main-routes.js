@@ -6,10 +6,15 @@ const api = require(`../api`).getAPI();
 const {convertViewArticles} = require(`../adapters/view-model`);
 
 mainRouter.get(`/`, async (_req, res) => {
-  const articles = await api.getArticles();
+  const [articles, categories] = await Promise.all([
+    api.getArticles(true),
+    api.getCategories(true)
+  ]);
   const template = articles.length === 0 ? `main-empty` : `main`;
+
   res.render(template, {
-    articles: convertViewArticles(articles)
+    articles: convertViewArticles(articles),
+    categories
   });
 });
 

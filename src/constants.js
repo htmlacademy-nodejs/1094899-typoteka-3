@@ -33,9 +33,11 @@ module.exports.Env = {
 };
 
 module.exports.DATE_PATTERN = {
-  default: `YYYY-MM-DD HH:mm:ss`,
+  default: `YYYY-MM-DDTHH:mm:ss`, // `YYYY-MM-DD HH:mm:ss`,
   humanReadable: `DD.MM.YYYY, HH:mm`,
   robotReadable: `YYYY-MM-DDTHH:mm`,
   dateReverse: `YYYY-MM-DD`,
   dateOnly: `DD.MM.YYYY`,
 };
+
+module.exports.VALID_ARTICLE_KEYS = [`categories`, `announce`, `text`, `title`, `createdAt`, `image`];

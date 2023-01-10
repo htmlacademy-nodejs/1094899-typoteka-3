@@ -29,11 +29,11 @@ block content
                       input.visually-hidden(type='file' name='upload')
                       | Обзор
                 .new-publication__category-wrapper
-                  each category, index in categories
+                  each category in categories
                     .new-publication__checkbox
-                      input(id=`category-checkbox-${index}` type='checkbox' name='category[]' value=category)
-                      label(for=`category-checkbox-${index}`)
-                        | #{category}
+                      input(id=`category-checkbox-${category.id}` type='checkbox' name='category[]' value=category.id)
+                      label(for=`category-checkbox-${category.id}`)
+                        | #{category.name}
                   a.new-publication__form-link.button.button--transparent(href='/my/categories') Добавить категорию
               .form__wrapper.form__wrapper--text
                 .form__field.form__field--publication-text

@@ -1,7 +1,7 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {convertViewArticle, parseViewArticle} = require(`../adapters/view-model`);
+const {convertViewArticle, parseViewArticle, convertViewArticles} = require(`../adapters/view-model`);
 const {Env} = require(`../../constants`);
 const multer = require(`multer`);
 const path = require(`path`);
@@ -58,8 +58,30 @@ articleRouter.post(`/add`, upload.single(`upload`), async (req, res) => {
   }
 });
 
+articleRouter.get(`/category/:id`, async (req, res) => {
+  const {id: categoryId} = req.params;
+  const [articles, categories] = await Promise.all([
+    api.getArticles(true, categoryId),
+    api.getCategories(true)
+  ]);
 
-articleRouter.get(`/category/:id`, (_req, res) => res.render(`articles-by-category`));
-articleRouter.get(`/:id`, (_req, res) => res.render(`post-detail`));
+  res.render(`articles-by-category`, {
+    articles: convertViewArticles(articles),
+    categories,
+    categoryId
+  });
+});
+
+articleRouter.get(`/:id`, async (req, res) => {
+  const {id} = req.params;
+  const [article, totalCategories] = await Promise.all([
+    api.getArticle(id, true),
+    api.getCategories(true)
+  ]);
+
+  res.render(`post-detail`, {
+    article: convertViewArticle(article, totalCategories),
+  });
+});
 
 module.exports = articleRouter;

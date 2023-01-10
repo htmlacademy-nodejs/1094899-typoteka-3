@@ -44,8 +44,8 @@ INSERT INTO articles(title, announce, "text", image, user_id) VALUES
 ALTER TABLE articles ENABLE TRIGGER ALL;
 
 -- добавление связи категорий со статьями
-ALTER TABLE article_categories DISABLE TRIGGER ALL;
-INSERT INTO article_categories(article_id, category_id) VALUES
+ALTER TABLE article_category DISABLE TRIGGER ALL;
+INSERT INTO article_category(article_id, category_id) VALUES
 (1, 1),
 (1, 2),
 (1, 3),
@@ -56,7 +56,7 @@ INSERT INTO article_categories(article_id, category_id) VALUES
 (3, 8),
 (3, 9),
 (3, 1);
-ALTER TABLE article_categories ENABLE TRIGGER ALL;
+ALTER TABLE article_category ENABLE TRIGGER ALL;
 
 -- добавление комментариев
 ALTER TABLE comments DISABLE TRIGGER ALL;

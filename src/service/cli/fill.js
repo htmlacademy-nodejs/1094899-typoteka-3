@@ -92,10 +92,10 @@ ALTER TABLE articles DISABLE TRIGGER ALL;
 INSERT INTO articles(title, announce, "text", image, user_id) VALUES
 ${articleValues};
 ALTER TABLE articles ENABLE TRIGGER ALL;
-ALTER TABLE article_categories DISABLE TRIGGER ALL;
-INSERT INTO article_categories(article_id, category_id) VALUES
+ALTER TABLE article_category DISABLE TRIGGER ALL;
+INSERT INTO article_category(article_id, category_id) VALUES
 ${articleCategoryValues};
-ALTER TABLE article_categories ENABLE TRIGGER ALL;
+ALTER TABLE article_category ENABLE TRIGGER ALL;
 ALTER TABLE comments DISABLE TRIGGER ALL;
 INSERT INTO comments(text, user_id, article_id) VALUES
 ${commentValues};
