@@ -1,6 +1,6 @@
 'use strict';
 
-const {Sequelize} = require(`sequelize`);
+const {Op} = require(`sequelize`);
 
 class SearchService {
   constructor(sequelize) {
@@ -11,7 +11,7 @@ class SearchService {
     const articles = await this._Article.findAll({
       where: {
         title: {
-          [Sequelize.Op.iLike]: `%${searchText}%`
+          [Op.substring]: searchText // [Sequelize.Op.iLike]: `%${searchText}%`
         }
       },
       order: [

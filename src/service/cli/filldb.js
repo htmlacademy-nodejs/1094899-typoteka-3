@@ -5,8 +5,7 @@ const {ExitCode, Encoding} = require(`../../constants`);
 const {getRandomInt, shuffle} = require(`../../utils/common`);
 const {getLogger} = require(`../lib/logger`);
 const sequelize = require(`../lib/sequelize`);
-const defineModels = require(`../models`);
-const Aliase = require(`../models/aliase`);
+const initDatabase = require(`../lib/init-db`);
 
 const DEFAULT_COUNT = 1;
 const TOTAL_MOCK_LIMIT = 1000;
@@ -75,29 +74,8 @@ module.exports = {
     ]);
 
     const mockArticles = generateArticles(countArticle, titles, categories, sentences, comments);
+    logger.info(`Prepare mock articles: ${mockArticles.count}.`);
 
-    const {Category, Article} = defineModels(sequelize);
-    await sequelize.sync({force: true});
-
-    const categoryModels = await Category.bulkCreate(
-        categories.map((item) => ({name: item}))
-    );
-
-    const categoryIdByName = categoryModels.reduce((acc, next) => ({
-      [next.name]: next.id,
-      ...acc
-    }), {});
-
-    const articlePromises = mockArticles.map(async (article) => {
-      const articleModel = await Article.create(article, {include: [Aliase.COMMENTS]});
-      await articleModel.addCategories(
-          article.categories.map(
-              (name) => categoryIdByName[name]
-          )
-      );
-    });
-
-    await Promise.all(articlePromises);
-    logger.info(`Operation success. Mock articles are writed: ${mockArticles.count}.`);
+    return initDatabase(sequelize, {categories, mockArticles});
   }
 };
