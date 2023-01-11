@@ -18,9 +18,9 @@ privateRouter.get(`/categories`, async (_req, res) => {
 });
 
 privateRouter.get(`/comments`, async (_req, res) => {
-  const articles = await api.getArticles(true);
+  const articles = await api.getArticles({comments: true});
   res.render(`comments`, {
-    articles: convertViewArticles(articles.slice(0, 3))
+    articles: convertViewArticles(articles)
   });
 });
 

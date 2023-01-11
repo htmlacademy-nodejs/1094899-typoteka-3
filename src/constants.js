@@ -41,3 +41,4 @@ module.exports.DATE_PATTERN = {
 };
 
 module.exports.VALID_ARTICLE_KEYS = [`categories`, `announce`, `text`, `title`, `createdAt`, `image`];
+module.exports.ARTICLES_PER_PAGE = 8;
