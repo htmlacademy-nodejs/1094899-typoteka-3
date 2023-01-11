@@ -13,10 +13,14 @@ module.exports = (app, articleService, commentService) => {
 
   /** ресурс возвращает список публикаций */
   route.get(`/`, async (req, res) => {
-    const {categoryId} = req.query;
-    const {comments} = req.query;
-    const articles = await articleService.findAll(categoryId, comments);
-    res.status(HTTP_CODE.ok).json(articles);
+    const {offset, limit, categoryId, comments} = req.query;
+    let result;
+    if (limit || offset) {
+      result = await articleService.findPage({limit, offset});
+    } else {
+      result = await articleService.findAll({categoryId, needComments: comments});
+    }
+    res.status(HTTP_CODE.ok).json(result);
   });
 
   /** возвращает полную информацию о публикации */

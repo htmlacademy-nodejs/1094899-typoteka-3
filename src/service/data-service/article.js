@@ -23,7 +23,7 @@ class ArticleService {
     return !!deletedRows;
   }
 
-  async findAll(categoryId, needComments) {
+  async findAll({categoryId, needComments}) {
     const include = categoryId
       ? [{model: this._Category, as: Aliase.CATEGORIES, where: {id: categoryId}}]
       : [Aliase.CATEGORIES];
@@ -56,6 +56,18 @@ class ArticleService {
     return !!affectedRows;
   }
 
+  async findPage({limit, offset}) {
+    const {count, rows} = await this._Article.findAndCountAll({
+      limit,
+      offset,
+      include: [Aliase.CATEGORIES, Aliase.COMMENTS],
+      order: [
+        [`createdAt`, `DESC`]
+      ],
+      distinct: true
+    });
+    return {count, articles: rows};
+  }
 }
 
 module.exports = ArticleService;

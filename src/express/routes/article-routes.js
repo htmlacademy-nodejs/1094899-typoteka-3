@@ -61,7 +61,7 @@ articleRouter.post(`/add`, upload.single(`upload`), async (req, res) => {
 articleRouter.get(`/category/:id`, async (req, res) => {
   const {id: categoryId} = req.params;
   const [articles, categories] = await Promise.all([
-    api.getArticles(true, categoryId),
+    api.getArticles({comments: true, categoryId}),
     api.getCategories(true)
   ]);
 
