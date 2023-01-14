@@ -22,23 +22,53 @@ module.exports.Encoding = {
   utf8: `utf-8`,
 };
 
-module.exports.MIME = {
-  plainText: `text/plain`,
-  html: `text/html`
-};
-
 module.exports.Env = {
   DEVELOPMENT: `development`,
   PRODUCTION: `production`
 };
 
 module.exports.DATE_PATTERN = {
-  default: `YYYY-MM-DDTHH:mm:ss`, // `YYYY-MM-DD HH:mm:ss`,
+  default: `YYYY-MM-DDTHH:mm:ss`,
   humanReadable: `DD.MM.YYYY, HH:mm`,
   robotReadable: `YYYY-MM-DDTHH:mm`,
   dateReverse: `YYYY-MM-DD`,
   dateOnly: `DD.MM.YYYY`,
 };
 
-module.exports.VALID_ARTICLE_KEYS = [`categories`, `announce`, `text`, `title`, `createdAt`, `image`];
+module.exports.HttpMethod = {
+  GET: `GET`,
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`
+};
+
+module.exports.ErrorCommentMessage = {
+  TEXT: `Комментарий содержит меньше 20 символов`,
+  USER_ID: `Некорректный идентификатор пользователя`
+};
+
+module.exports.ErrorArticleMessage = {
+  CATEGORIES: `Не выбрана ни одна категория объявления`,
+  TITLE_MIN: `Заголовок содержит меньше 10 символов`,
+  TITLE_MAX: `Заголовок не может содержать более 100 символов`,
+  ANNOUNCE_MIN: `Описание содержит меньше 50 символов`,
+  ANNOUNCE_MAX: `Описание не может содержать более 1000 символов`,
+  PICTURE: `Изображение не выбрано или тип изображения не поддерживается`,
+  FULL_TEXT_MAX: `публикация не может содержать более 1000 символов`
+};
+
+module.exports.ErrorRegisterMessage = {
+  NAME: `Имя содержит некорректные символы`,
+  EMAIL: `Некорректный электронный адрес`,
+  EMAIL_EXIST: `Электронный адрес уже используется`,
+  PASSWORD: `Пароль содержит меньше 6-ти символов`,
+  PASSWORD_REPEATED: `Пароли не совпадают`,
+  AVATAR: `Изображение не выбрано или тип изображения не поддерживается`
+};
+
+module.exports.ErrorAuthMessage = {
+  EMAIL: `Электронный адрес не существует`,
+  PASSWORD: `Неверный пароль`
+};
+
 module.exports.ARTICLES_PER_PAGE = 8;

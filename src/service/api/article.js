@@ -5,6 +5,7 @@ const {HTTP_CODE} = require(`../../constants`);
 const articleValidator = require(`../middlewares/article-validator`);
 const articleExist = require(`../middlewares/article-exists`);
 const commentValidator = require(`../middlewares/comment-validator`);
+const routeParamsValidator = require(`../middlewares/route-params-validator`);
 
 
 module.exports = (app, articleService, commentService) => {
@@ -24,7 +25,7 @@ module.exports = (app, articleService, commentService) => {
   });
 
   /** возвращает полную информацию о публикации */
-  route.get(`/:articleId`, async (req, res) => {
+  route.get(`/:articleId`, routeParamsValidator, async (req, res) => {
     const {articleId} = req.params;
     const {comments} = req.query;
 
@@ -47,7 +48,7 @@ module.exports = (app, articleService, commentService) => {
   });
 
   /** редактирует определённую публикацию */
-  route.put(`/:articleId`, articleValidator, async (req, res) => {
+  route.put(`/:articleId`, [routeParamsValidator, articleValidator], async (req, res) => {
     const {articleId} = req.params;
     const existArticle = await articleService.findOne(articleId);
 
@@ -63,7 +64,7 @@ module.exports = (app, articleService, commentService) => {
   });
 
   /** удаляет определённую публикацию */
-  route.delete(`/:articleId`, async (req, res) => {
+  route.delete(`/:articleId`, routeParamsValidator, async (req, res) => {
     const {articleId} = req.params;
     const article = await articleService.drop(articleId);
 
@@ -77,7 +78,7 @@ module.exports = (app, articleService, commentService) => {
   });
 
   /** возвращает список комментариев определённой публикации */
-  route.get(`/:articleId/comments`, articleExist(articleService), async (req, res) => {
+  route.get(`/:articleId/comments`, [articleExist(articleService), routeParamsValidator], async (req, res) => {
     const {article} = res.locals;
     const comments = await commentService.findAll(article.id);
 
@@ -86,7 +87,7 @@ module.exports = (app, articleService, commentService) => {
   });
 
   /** удаляет из определённой публикации комментарий */
-  route.delete(`/:articleId/comments/:commentId`, articleExist(articleService), async (req, res) => {
+  route.delete(`/:articleId/comments/:commentId`, [articleExist(articleService), routeParamsValidator], async (req, res) => {
     const {article} = res.locals;
     const {commentId} = req.params;
     const deletedComment = await commentService.drop(article, commentId);

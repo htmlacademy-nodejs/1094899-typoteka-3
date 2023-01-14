@@ -6,9 +6,10 @@ const {Env} = require(`../../constants`);
 const multer = require(`multer`);
 const path = require(`path`);
 const {nanoid} = require(`nanoid`);
-const articleRouter = new Router();
 const api = require(`../api`).getAPI();
+const {prepareErrors} = require(`../../utils/error`);
 
+const articleRouter = new Router();
 const isDevMode = process.env.NODE_ENV === Env.DEVELOPMENT;
 
 const UPLOAD_DIR = `../upload/img/`;
@@ -26,20 +27,57 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage});
 
-articleRouter.get(`/edit/:id`, async (req, res) => {
-  const {id} = req.params;
+const getAddArticleData = () => {
+  return api.getCategories();
+};
+
+const getEditArticleData = async (articleId) => {
   const [article, categories] = await Promise.all([
-    api.getArticle(id),
+    api.getArticle(articleId),
     api.getCategories()
   ]);
+  return [article, categories];
+};
+
+const getViewArticleData = async (articleId, comments) => {
+  const [article, totalCategories] = await Promise.all([
+    api.getArticle(articleId, comments),
+    api.getCategories(true)
+  ]);
+  return [article, totalCategories];
+};
+
+articleRouter.get(`/edit/:id`, async (req, res) => {
+  const {id} = req.params;
+  const [article, categories] = await getEditArticleData(id);
   res.render(`post-edit`, {
+    id,
     article: convertViewArticle(article),
     categories
   });
 });
 
+articleRouter.post(`/edit/:id`, upload.single(`avatar`), async (req, res) => {
+  const {body, file} = req;
+  const {id} = req.params;
+  const articleData = parseViewArticle(body, file);
+  try {
+    await api.editArticle(id, articleData);
+    res.redirect(`/my`);
+  } catch (errors) {
+    const validationMessages = prepareErrors(errors);
+    const [article, categories] = await getEditArticleData(id);
+    res.render(`post-edit`, {
+      id,
+      article: convertViewArticle(article),
+      categories,
+      validationMessages
+    });
+  }
+});
+
 articleRouter.get(`/add`, async (_req, res) => {
-  const categories = await api.getCategories();
+  const categories = await getAddArticleData();
 
   res.render(`post-new`, {categories});
 });
@@ -50,11 +88,13 @@ articleRouter.post(`/add`, upload.single(`upload`), async (req, res) => {
   try {
     await api.createArticle(articleData);
     res.redirect(`/my`);
-  } catch (error) {
+  } catch (errors) {
     if (isDevMode) {
-      console.error(error);
+      console.error(errors);
     }
-    res.redirect(`back`);
+    const validationMessages = prepareErrors(errors);
+    const categories = await getAddArticleData();
+    res.render(`post-new`, {categories, validationMessages});
   }
 });
 
@@ -74,14 +114,30 @@ articleRouter.get(`/category/:id`, async (req, res) => {
 
 articleRouter.get(`/:id`, async (req, res) => {
   const {id} = req.params;
-  const [article, totalCategories] = await Promise.all([
-    api.getArticle(id, true),
-    api.getCategories(true)
-  ]);
+  const [article, totalCategories] = await getViewArticleData(id, true);
 
   res.render(`post-detail`, {
     article: convertViewArticle(article, totalCategories),
+    id
   });
+});
+
+articleRouter.post(`/:id/comments`, async (req, res) => {
+  const {user} = req.session;
+  const {id} = req.params;
+  const {comment} = req.body;
+  try {
+    await api.createComment(id, {userId: user.id, text: comment});
+    res.redirect(`/offers/${id}`);
+  } catch (errors) {
+    const validationMessages = prepareErrors(errors);
+    const offer = await getViewArticleData(id, true);
+    res.render(`post-detail`, {
+      offer,
+      id,
+      validationMessages
+    });
+  }
 });
 
 module.exports = articleRouter;

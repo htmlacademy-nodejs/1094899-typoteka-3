@@ -1,15 +1,37 @@
 'use strict';
 
-const {HTTP_CODE, VALID_ARTICLE_KEYS} = require(`../../constants`);
+const Joi = require(`joi`);
+const {HTTP_CODE, ErrorArticleMessage} = require(`../../constants`);
+
+const schema = Joi.object({
+  title: Joi.string().min(10).max(100).required().messages({
+    'string.min': ErrorArticleMessage.TITLE_MIN,
+    'string.max': ErrorArticleMessage.TITLE_MAX
+  }),
+  announce: Joi.string().min(30).max(250).required().messages({
+    'string.min': ErrorArticleMessage.ANNOUNCE_MIN,
+    'string.max': ErrorArticleMessage.ANNOUNCE_MAX
+  }),
+  text: Joi.string().max(1000).messages({
+    'string.max': ErrorArticleMessage.FULL_TEXT_MAX
+  }),
+  image: Joi.string().messages({
+    'string.empty': ErrorArticleMessage.PICTURE
+  }),
+  categories: Joi.array().items(
+      Joi.number().integer().positive().messages({
+        'number.base': ErrorArticleMessage.CATEGORIES
+      })
+  ).min(1).required()
+});
 
 module.exports = (req, res, next) => {
   const newArticle = req.body;
-  const keys = Object.keys(newArticle);
-  const keysExists = keys.every((key) => VALID_ARTICLE_KEYS.includes(key));
+  const {error} = schema.validate(newArticle, {abortEarly: false});
 
-  if (!keysExists) {
+  if (error) {
     return res.status(HTTP_CODE.clientError)
-      .send(`Bad request: incorrect article keys`);
+      .send(error.details.map((err) => err.message).join(`\n`));
   }
 
   return next();
