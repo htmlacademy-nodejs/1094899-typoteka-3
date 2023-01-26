@@ -52,7 +52,7 @@ body
           li
             a.pagination__button.button.button--forward(href=`${prefix}page=${page + 1}`) Вперед
 
-  mixin insertErrorMessage(messages)
+  mixin insertErrorMessages(messages)
     if messages
       each message of messages
         .server-error= message

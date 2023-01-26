@@ -5,7 +5,12 @@ header.header
   nav.header__nav
     ul.header__nav-list
       li.header__list-item
-        a.header__registration(href='#') Регистрация
+        a.header__registration(href='/register') Регистрация
       li.header__list-item
-        a.header__enter(href='#') Вход с паролем
+        if user
+          a.header__avatar.avatar(href="#")
+            img(src=`/img/${user.avatar}` alt='Аватар пользователя')
+          a(href='/logout') Выход
+        else
+          a.header__enter(href='/login') Вход с паролем
   a.header__search.button.button--search(href='/search' aria-label='поиск по сайту')
