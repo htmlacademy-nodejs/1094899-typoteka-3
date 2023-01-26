@@ -3,29 +3,12 @@
 const {Router} = require(`express`);
 const {convertViewArticle, parseViewArticle, convertViewArticles} = require(`../adapters/view-model`);
 const {Env} = require(`../../constants`);
-const multer = require(`multer`);
-const path = require(`path`);
-const {nanoid} = require(`nanoid`);
 const api = require(`../api`).getAPI();
+const upload = require(`../middlewares/upload`);
 const {prepareErrors} = require(`../../utils/error`);
 
 const articleRouter = new Router();
 const isDevMode = process.env.NODE_ENV === Env.DEVELOPMENT;
-
-const UPLOAD_DIR = `../upload/img/`;
-
-const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
-
-const storage = multer.diskStorage({
-  destination: uploadDirAbsolute,
-  filename: (_req, file, cb) => {
-    const uniqueName = nanoid(10);
-    const extension = file.originalname.split(`.`).pop();
-    cb(null, `${uniqueName}.${extension}`);
-  }
-});
-
-const upload = multer({storage});
 
 const getAddArticleData = () => {
   return api.getCategories();
