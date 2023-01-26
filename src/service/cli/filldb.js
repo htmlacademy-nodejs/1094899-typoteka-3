@@ -4,6 +4,7 @@ const fs = require(`fs`).promises;
 const {ExitCode, Encoding} = require(`../../constants`);
 const {getRandomInt, shuffle} = require(`../../utils/common`);
 const {getLogger} = require(`../lib/logger`);
+const passwordUtils = require(`../lib/password`);
 const sequelize = require(`../lib/sequelize`);
 const initDatabase = require(`../lib/init-db`);
 
@@ -29,19 +30,21 @@ const readContent = async (filePath) => {
   }
 };
 
-const generateComments = (count, comments) => (
+const generateComments = (count, comments, users) => (
   Array.from({length: count}, () => ({
     text: shuffle(comments)[getRandomInt(0, comments.length - 1)],
+    user: users[getRandomInt(0, users.length - 1)].email,
   }))
 );
 
-const generateArticles = (count, titles, categories, announces, comments) => (
+const generateArticles = (count, titles, categories, announces, comments, users) => (
   Array.from({length: count}, () => ({
     title: titles[getRandomInt(0, titles.length - 1)],
     announce: shuffle(announces).slice(1, getRandomInt(1, MAX_ANNOUNCE_COUNT)).join(` `),
     text: shuffle(announces).slice(1, getRandomInt(1, announces.length - 1)).join(` `),
     categories: shuffle(categories).slice(1, getRandomInt(1, categories.length - 1)),
-    comments: generateComments(getRandomInt(1, MAX_COMMENTS), comments),
+    comments: generateComments(getRandomInt(1, MAX_COMMENTS), comments, users),
+    user: users[getRandomInt(0, users.length - 1)].email,
   }))
 );
 
@@ -73,7 +76,22 @@ module.exports = {
       readContent(FILE_COMMENTS_PATH),
     ]);
 
-    const mockArticles = generateArticles(countArticle, titles, categories, sentences, comments);
+    const users = [
+      {
+        name: `Иван Иванов`,
+        email: `ivanov@example.com`,
+        passwordHash: await passwordUtils.hash(`ivanov`),
+        avatar: `avatar01.jpg`
+      },
+      {
+        name: `Пётр Петров`,
+        email: `petrov@example.com`,
+        passwordHash: await passwordUtils.hash(`petrov`),
+        avatar: `avatar02.jpg`
+      }
+    ];
+
+    const mockArticles = generateArticles(countArticle, titles, categories, sentences, comments, users);
     logger.info(`Prepare mock articles: ${mockArticles.count}.`);
 
     return initDatabase(sequelize, {categories, mockArticles});

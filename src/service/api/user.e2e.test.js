@@ -6,9 +6,8 @@ const Sequelize = require(`sequelize`);
 
 const initDB = require(`../lib/init-db`);
 const passwordUtils = require(`../lib/password`);
-const articleRouter = require(`./article`);
-const ArticleService = require(`../data-service/article`);
-const CommentService = require(`../data-service/comment`);
+const userRouter = require(`./user`);
+const UserService = require(`../data-service/user`);
 
 const {HTTP_CODE} = require(`../../constants`);
 
@@ -101,19 +100,27 @@ const createAPI = async () => {
 
   const app = express();
   app.use(express.json());
-  articleRouter(app, new ArticleService(mockDB), new CommentService(mockDB));
+  userRouter(app, new UserService(mockDB));
   return app;
 };
 
-describe(`API returns a list of all articles`, () => {
+describe(`API creates user if data is valid`, () => {
+  const validUserData = {
+    name: `Сидор Сидоров`,
+    email: `sidorov@example.com`,
+    password: `sidorov`,
+    passwordRepeated: `sidorov`,
+    avatar: `sidorov.jpg`
+  };
+
   let response;
 
   beforeAll(async () => {
-    const app = await createAPI();
+    let app = await createAPI();
     response = await request(app)
-      .get(`/articles`);
+      .post(`/user`)
+      .send(validUserData);
   });
 
-  test(`Status code 200`, () => expect(response.statusCode).toBe(HTTP_CODE.ok));
-  test(`First article's title is correct`, () => expect(response.body[0].title).toBe(`Что такое осень`));
+  test(`Status code 201`, () => expect(response.statusCode).toBe(HTTP_CODE.successSilent));
 });
