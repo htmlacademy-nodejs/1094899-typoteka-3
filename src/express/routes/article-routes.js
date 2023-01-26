@@ -128,12 +128,12 @@ articleRouter.post(`/:id/comments`, async (req, res) => {
   const {comment} = req.body;
   try {
     await api.createComment(id, {userId: user.id, text: comment});
-    res.redirect(`/offers/${id}`);
+    res.redirect(`/articles/${id}`);
   } catch (errors) {
     const validationMessages = prepareErrors(errors);
-    const offer = await getViewArticleData(id, true);
+    const [article, totalCategories] = await getViewArticleData(id, true);
     res.render(`post-detail`, {
-      offer,
+      article: convertViewArticle(article, totalCategories),
       id,
       validationMessages
     });
