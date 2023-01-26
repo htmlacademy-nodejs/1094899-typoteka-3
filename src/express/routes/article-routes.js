@@ -7,7 +7,9 @@ const api = require(`../api`).getAPI();
 const upload = require(`../middlewares/upload`);
 const {prepareErrors} = require(`../../utils/error`);
 const auth = require(`../middlewares/auth`);
+const csrf = require(`csurf`);
 
+const csrfProtection = csrf();
 const articleRouter = new Router();
 const isDevMode = process.env.NODE_ENV === Env.DEVELOPMENT;
 
@@ -31,7 +33,7 @@ const getViewArticleData = async (articleId, comments) => {
   return [article, totalCategories];
 };
 
-articleRouter.get(`/edit/:id`, auth, async (req, res) => {
+articleRouter.get(`/edit/:id`, auth, csrfProtection, async (req, res) => {
   const {user} = req.session;
   const {id} = req.params;
   const [article, categories] = await getEditArticleData(id);
@@ -40,10 +42,11 @@ articleRouter.get(`/edit/:id`, auth, async (req, res) => {
     article: convertViewArticle(article),
     categories,
     user,
+    csrfToken: req.csrfToken(),
   });
 });
 
-articleRouter.post(`/edit/:id`, auth, upload.single(`avatar`), async (req, res) => {
+articleRouter.post(`/edit/:id`, auth, upload.single(`avatar`), csrfProtection, async (req, res) => {
   const {body, file} = req;
   const {id} = req.params;
   const articleData = parseViewArticle(body, file);
@@ -60,18 +63,19 @@ articleRouter.post(`/edit/:id`, auth, upload.single(`avatar`), async (req, res) 
       categories,
       validationMessages,
       user,
+      csrfToken: req.csrfToken(),
     });
   }
 });
 
-articleRouter.get(`/add`, auth, async (req, res) => {
+articleRouter.get(`/add`, auth, csrfProtection, async (req, res) => {
   const {user} = req.session;
   const categories = await getAddArticleData();
 
-  res.render(`post-new`, {categories, user});
+  res.render(`post-new`, {categories, user, csrfToken: req.csrfToken()});
 });
 
-articleRouter.post(`/add`, auth, upload.single(`upload`), async (req, res) => {
+articleRouter.post(`/add`, auth, upload.single(`upload`), csrfProtection, async (req, res) => {
   const {body, file} = req;
   const articleData = parseViewArticle(body, file);
   try {
@@ -88,6 +92,7 @@ articleRouter.post(`/add`, auth, upload.single(`upload`), async (req, res) => {
       categories,
       validationMessages,
       user,
+      csrfToken: req.csrfToken(),
     });
   }
 });
@@ -108,7 +113,7 @@ articleRouter.get(`/category/:id`, async (req, res) => {
   });
 });
 
-articleRouter.get(`/:id`, async (req, res) => {
+articleRouter.get(`/:id`, csrfProtection, async (req, res) => {
   const {user} = req.session;
   const {id} = req.params;
   const [article, totalCategories] = await getViewArticleData(id, true);
@@ -116,11 +121,12 @@ articleRouter.get(`/:id`, async (req, res) => {
   res.render(`post-detail`, {
     article: convertViewArticle(article, totalCategories),
     id,
-    user
+    user,
+    csrfToken: req.csrfToken(),
   });
 });
 
-articleRouter.post(`/:id/comments`, auth, async (req, res) => {
+articleRouter.post(`/:id/comments`, auth, csrfProtection, async (req, res) => {
   const {user} = req.session;
   const {id} = req.params;
   const {comment} = req.body;
@@ -135,6 +141,7 @@ articleRouter.post(`/:id/comments`, auth, async (req, res) => {
       id,
       validationMessages,
       user,
+      csrfToken: req.csrfToken(),
     });
   }
 });
