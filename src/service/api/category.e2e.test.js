@@ -5,6 +5,7 @@ const request = require(`supertest`);
 const Sequelize = require(`sequelize`);
 
 const initDB = require(`../lib/init-db`);
+const passwordUtils = require(`../lib/password`);
 const categoryRoute = require(`./category`);
 const DataService = require(`../data-service/category`);
 const {HTTP_CODE} = require(`../../constants`);
@@ -14,6 +15,21 @@ const categoriesMock = [
   `За жизнь`,
   `Музыка`,
   `Разное`
+];
+
+const mockUsers = [
+  {
+    name: `Иван Иванов`,
+    email: `ivanov@example.com`,
+    passwordHash: passwordUtils.hashSync(`ivanov`),
+    avatar: `avatar01.jpg`
+  },
+  {
+    name: `Пётр Петров`,
+    email: `petrov@example.com`,
+    passwordHash: passwordUtils.hashSync(`petrov`),
+    avatar: `avatar02.jpg`
+  }
 ];
 
 const articlesMock = [
@@ -26,7 +42,8 @@ const articlesMock = [
       `Железо`,
       `Разное`,
     ],
-    "comments": []
+    "comments": [],
+    "user": `ivanov@example.com`,
   },
   {
     "title": `Что такое золотое сечение`,
@@ -38,7 +55,8 @@ const articlesMock = [
       `За жизнь`,
       `Музыка`
     ],
-    "comments": []
+    "comments": [],
+    "user": `ivanov@example.com`,
   },
 ];
 
@@ -47,7 +65,7 @@ const app = express();
 app.use(express.json());
 
 beforeAll(async () => {
-  await initDB(mockDB, {categories: categoriesMock, articles: articlesMock});
+  await initDB(mockDB, {categories: categoriesMock, articles: articlesMock, users: mockUsers});
   categoryRoute(app, new DataService(mockDB));
 });
 

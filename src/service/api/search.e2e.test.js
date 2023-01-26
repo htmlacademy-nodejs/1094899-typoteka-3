@@ -5,6 +5,7 @@ const request = require(`supertest`);
 const Sequelize = require(`sequelize`);
 const searchRoute = require(`./search`);
 const initDB = require(`../lib/init-db`);
+const passwordUtils = require(`../lib/password`);
 const DataService = require(`../data-service/search`);
 const {HTTP_CODE} = require(`../../constants`);
 
@@ -18,6 +19,21 @@ const categoriesMock = [
   `IT`
 ];
 
+const mockUsers = [
+  {
+    name: `Иван Иванов`,
+    email: `ivanov@example.com`,
+    passwordHash: passwordUtils.hashSync(`ivanov`),
+    avatar: `avatar01.jpg`
+  },
+  {
+    name: `Пётр Петров`,
+    email: `petrov@example.com`,
+    passwordHash: passwordUtils.hashSync(`petrov`),
+    avatar: `avatar02.jpg`
+  }
+];
+
 const articlesMock = [
   {
     "title": `Учим HTML и CSS`,
@@ -27,7 +43,8 @@ const articlesMock = [
     "categories": [
       `Железо`
     ],
-    "comments": []
+    "comments": [],
+    "user": `ivanov@example.com`,
   },
   {
     "title": `Как перестать беспокоиться и начать жить`,
@@ -43,7 +60,8 @@ const articlesMock = [
       `Разное`,
       `IT`
     ],
-    "comments": []
+    "comments": [],
+    "user": `ivanov@example.com`,
   },
   {
     "title": `Что такое золотое сечение`,
@@ -56,7 +74,8 @@ const articlesMock = [
       `Разное`,
       `Музыка`
     ],
-    "comments": []
+    "comments": [],
+    "user": `ivanov@example.com`,
   },
 ];
 
@@ -65,7 +84,7 @@ const app = express();
 app.use(express.json());
 
 beforeAll(async () => {
-  await initDB(mockDB, {categories: categoriesMock, articles: articlesMock});
+  await initDB(mockDB, {categories: categoriesMock, articles: articlesMock, users: mockUsers});
   searchRoute(app, new DataService(mockDB));
 });
 

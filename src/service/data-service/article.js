@@ -1,4 +1,3 @@
-/* eslint-disable spaced-comment */
 'use strict';
 
 const Aliase = require(`../models/aliase`);
@@ -8,6 +7,7 @@ class ArticleService {
     this._Article = sequelize.models.Article;
     this._Comment = sequelize.models.Comment;
     this._Category = sequelize.models.Category;
+    this._User = sequelize.models.User;
   }
 
   async create(articleData) {
@@ -24,12 +24,36 @@ class ArticleService {
   }
 
   async findAll({categoryId, needComments}) {
-    const include = categoryId
-      ? [{model: this._Category, as: Aliase.CATEGORIES, where: {id: categoryId}}]
-      : [Aliase.CATEGORIES];
+    const include = [
+      {
+        model: this._User,
+        as: Aliase.USERS,
+        attributes: {
+          exclude: [`passwordHash`]
+        }
+      }
+    ];
+
+    include.push(
+        categoryId
+          ? {model: this._Category, as: Aliase.CATEGORIES, where: {id: categoryId}}
+          : Aliase.CATEGORIES
+    );
 
     if (needComments) {
-      include.push(Aliase.COMMENTS);
+      include.push({
+        model: this._Comment,
+        as: Aliase.COMMENTS,
+        include: [
+          {
+            model: this._User,
+            as: Aliase.USERS,
+            attributes: {
+              exclude: [`passwordHash`]
+            }
+          }
+        ]
+      });
     }
 
     const articles = await this._Article.findAll({
