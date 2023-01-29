@@ -12,6 +12,7 @@
     "start-api-server:dev": "cross-env NODE_ENV=development nodemon -r dotenv/config ./src/service/service.js --server 3000",
     "start-front-server": "cross-env NODE_ENV=production node -r dotenv/config ./src/express/express.js",
     "start-front-server:dev": "cross-env NODE_ENV=development nodemon -r dotenv/config ./src/express/express.js",
+    "start-servers": "concurrently --names \"SSR, BACKEND\" --prefix-colors \"green,red\" \"npm run start-front-server:dev\" \"npm run start-api-server:dev\"",
     "fix-windows-charset": "chcp 65001",
     "start-db-docker": "docker compose --project-name=\"academy-pgsql\" -f ./docker/docker-compose.yml --env-file ./.env up --detach",
     "stop-db-docker": "docker compose --project-name=\"academy-pgsql\" down"
@@ -45,6 +46,7 @@
     "axios": "0.27.2",
     "bcrypt": "5.1.0",
     "chalk": "4.1.2",
+    "concurrently": "7.6.0",
     "connect-session-sequelize": "7.1.5",
     "cross-env": "7.0.3",
     "csurf": "1.11.0",
