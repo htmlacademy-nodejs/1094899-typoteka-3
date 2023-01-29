@@ -2,7 +2,6 @@
 
 const {Router} = require(`express`);
 const {convertViewArticle, parseViewArticle, convertViewArticles} = require(`../adapters/view-model`);
-const {Env} = require(`../../constants`);
 const api = require(`../api`).getAPI();
 const upload = require(`../middlewares/upload`);
 const {prepareErrors} = require(`../../utils/error`);
@@ -11,7 +10,6 @@ const csrf = require(`csurf`);
 
 const csrfProtection = csrf();
 const articleRouter = new Router();
-const isDevMode = process.env.NODE_ENV === Env.DEVELOPMENT;
 
 const getAddArticleData = () => {
   return api.getCategories();
@@ -46,15 +44,15 @@ articleRouter.get(`/edit/:id`, auth, csrfProtection, async (req, res) => {
   });
 });
 
-articleRouter.post(`/edit/:id`, auth, upload.single(`avatar`), csrfProtection, async (req, res) => {
+articleRouter.post(`/edit/:id`, auth, upload.single(`upload`), csrfProtection, async (req, res) => {
+  const {user} = req.session;
   const {body, file} = req;
   const {id} = req.params;
-  const articleData = parseViewArticle(body, file);
+  const articleData = parseViewArticle(body, file, user);
   try {
     await api.editArticle(id, articleData);
     res.redirect(`/my`);
   } catch (errors) {
-    const {user} = req.session;
     const validationMessages = prepareErrors(errors);
     const [article, categories] = await getEditArticleData(id);
     res.render(`post-edit`, {
@@ -76,16 +74,13 @@ articleRouter.get(`/add`, auth, csrfProtection, async (req, res) => {
 });
 
 articleRouter.post(`/add`, auth, upload.single(`upload`), csrfProtection, async (req, res) => {
+  const {user} = req.session;
   const {body, file} = req;
-  const articleData = parseViewArticle(body, file);
+  const articleData = parseViewArticle(body, file, user);
   try {
     await api.createArticle(articleData);
     res.redirect(`/my`);
   } catch (errors) {
-    if (isDevMode) {
-      console.error(errors);
-    }
-    const {user} = req.session;
     const validationMessages = prepareErrors(errors);
     const categories = await getAddArticleData();
     res.render(`post-new`, {
@@ -134,7 +129,6 @@ articleRouter.post(`/:id/comments`, auth, csrfProtection, async (req, res) => {
     await api.createComment(id, {userId: user.id, text: message});
     res.redirect(`/articles/${id}#comments`);
   } catch (errors) {
-    console.dir(errors);
     const validationMessages = prepareErrors(errors);
     const [article, totalCategories] = await getViewArticleData(id, true);
     res.render(`post-detail`, {

@@ -5,7 +5,7 @@ block content
     section
       .popup.popup--new-publication.popup--anti
         .new-publication
-          form(action='/articles/add' method='POST' enctype='multipart/form-data' autocomplete='off')
+          form(action=`/articles/edit/${article.id}` method='POST' enctype='multipart/form-data' autocomplete='off')
             input(type='hidden' name='_csrf' value=csrfToken)
             .new-publication__header
               h1 Редактирование публикации

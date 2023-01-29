@@ -26,6 +26,7 @@ const schema = Joi.object({
   userId: Joi.number().integer().positive().required().messages({
     'number.base': ErrorArticleMessage.USER_ID
   }),
+  updatedAt: Joi.string().required(),
 });
 
 module.exports = (req, res, next) => {

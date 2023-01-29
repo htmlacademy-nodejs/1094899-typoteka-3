@@ -56,7 +56,6 @@ module.exports = (app, articleService, commentService) => {
       return res.status(HTTP_CODE.notFound)
         .send(`Not found with ${articleId}`);
     }
-
     const updatedArticle = await articleService.update(articleId, req.body);
 
     return res.status(HTTP_CODE.ok)

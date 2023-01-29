@@ -57,7 +57,6 @@ mainRouter.post(`/register`, upload.single(`upload`), async (req, res) => {
     await api.createUser(userData);
     res.redirect(`/login`);
   } catch (errors) {
-    console.dir(errors);
     const validationMessages = prepareErrors(errors);
     res.render(`sign-up`, {validationMessages});
   }

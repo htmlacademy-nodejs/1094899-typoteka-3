@@ -35,42 +35,26 @@ privateRouter.get(`/comments`, auth, async (req, res) => {
 
 privateRouter.post(`/comments/delete`, auth, async (req, res) => {
   const {id, articleId} = req.body;
-  try {
-    await api.deleteComment({commentId: id, articleId});
-    res.redirect(`/my/comments`);
-  } catch (e) {
-    res.render(`500`);
-  }
+  await api.deleteComment({commentId: id, articleId});
+  res.redirect(`/my/comments`);
 });
 
 privateRouter.post(`/categories/delete`, auth, async (req, res) => {
   const {id} = req.body;
-  try {
-    await api.deleteCategory(id);
-    res.redirect(`/my/categories`);
-  } catch (e) {
-    res.render(`500`);
-  }
+  await api.deleteCategory(id);
+  res.redirect(`/my/categories`);
 });
 
 privateRouter.post(`/categories/add`, auth, async (req, res) => {
   const {name} = req.body;
-  try {
-    await api.createCategory({name});
-    res.redirect(`/my/categories`);
-  } catch (e) {
-    res.render(`500`);
-  }
+  await api.createCategory({name});
+  res.redirect(`/my/categories`);
 });
 
 privateRouter.post(`/categories/edit`, auth, async (req, res) => {
   const {id, name} = req.body;
-  try {
-    await api.editCategory(id, {name});
-    res.redirect(`/my/categories`);
-  } catch (e) {
-    res.render(`500`);
-  }
+  await api.editCategory(id, {name});
+  res.redirect(`/my/categories`);
 });
 
 module.exports = privateRouter;
