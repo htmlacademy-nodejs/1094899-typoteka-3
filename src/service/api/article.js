@@ -56,7 +56,6 @@ module.exports = (app, articleService, commentService) => {
       return res.status(HTTP_CODE.notFound)
         .send(`Not found with ${articleId}`);
     }
-
     const updatedArticle = await articleService.update(articleId, req.body);
 
     return res.status(HTTP_CODE.ok)
@@ -88,9 +87,8 @@ module.exports = (app, articleService, commentService) => {
 
   /** удаляет из определённой публикации комментарий */
   route.delete(`/:articleId/comments/:commentId`, [articleExist(articleService), routeParamsValidator], async (req, res) => {
-    const {article} = res.locals;
     const {commentId} = req.params;
-    const deletedComment = await commentService.drop(article, commentId);
+    const deletedComment = await commentService.drop(commentId);
 
     if (!deletedComment) {
       return res.status(HTTP_CODE.notFound)
@@ -104,7 +102,7 @@ module.exports = (app, articleService, commentService) => {
   /** создаёт новый комментарий */
   route.post(`/:articleId/comments`, [articleExist(articleService), commentValidator], async (req, res) => {
     const {article} = res.locals;
-    const comment = await commentService.create(article, req.body);
+    const comment = await commentService.create(article.id, req.body);
 
     return res.status(HTTP_CODE.created)
       .json(comment);

@@ -14,10 +14,10 @@ const schema = Joi.object({
 
 module.exports = (req, res, next) => {
   const comment = req.body;
-
   const {error} = schema.validate(comment, {abortEarly: false});
+
   if (error) {
-    return res.status(HTTP_CODE.ok)
+    return res.status(HTTP_CODE.clientError)
       .send(error.details.map((err) => err.message).join(`\n`));
   }
 

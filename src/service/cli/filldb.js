@@ -91,9 +91,9 @@ module.exports = {
       }
     ];
 
-    const mockArticles = generateArticles(countArticle, titles, categories, sentences, comments, users);
-    logger.info(`Prepare mock articles: ${mockArticles.count}.`);
+    const articles = generateArticles(countArticle, titles, categories, sentences, comments, users);
+    logger.info(`Prepare mock articles: ${articles.count}.`);
 
-    return initDatabase(sequelize, {categories, mockArticles});
+    return initDatabase(sequelize, {categories, articles, users});
   }
 };

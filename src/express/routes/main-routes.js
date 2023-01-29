@@ -10,6 +10,7 @@ const {prepareErrors} = require(`../../utils/error`);
 const mainRouter = new Router();
 
 mainRouter.get(`/`, async (req, res) => {
+  const {user} = req.session;
   // получаем номер страницы
   let {page = 1} = req.query;
   page = +page;
@@ -35,7 +36,8 @@ mainRouter.get(`/`, async (req, res) => {
     articles: convertViewArticles(articles),
     categories,
     page,
-    totalPages
+    totalPages,
+    user,
   });
 });
 
@@ -61,7 +63,28 @@ mainRouter.post(`/register`, upload.single(`upload`), async (req, res) => {
 });
 
 mainRouter.get(`/login`, (_req, res) => res.render(`login`));
+
+mainRouter.post(`/login`, async (req, res) => {
+  try {
+    const user = await api.auth(req.body[`email`], req.body[`password`]);
+    req.session.user = user;
+    req.session.save(() => {
+      res.redirect(`/`);
+    });
+  } catch (errors) {
+    const validationMessages = prepareErrors(errors);
+    const {user} = req.session;
+    res.render(`login`, {user, validationMessages});
+  }
+});
+
+mainRouter.get(`/logout`, (req, res) => {
+  delete req.session.user;
+  res.redirect(`/`);
+});
+
 mainRouter.get(`/search`, async (req, res) => {
+  const {user} = req.session;
   const {query} = req.query;
   try {
     let results = null;
@@ -73,12 +96,14 @@ mainRouter.get(`/search`, async (req, res) => {
 
     res.render(`search`, {
       query,
-      results
+      results,
+      user,
     });
   } catch (error) {
     res.render(`search`, {
       query,
-      results: []
+      results: [],
+      user,
     });
   }
 });

@@ -68,7 +68,19 @@ class ArticleService {
   findOne(id, needComments) {
     const include = [Aliase.CATEGORIES];
     if (needComments) {
-      include.push(Aliase.COMMENTS);
+      include.push({
+        model: this._Comment,
+        as: Aliase.COMMENTS,
+        include: [
+          {
+            model: this._User,
+            as: Aliase.USERS,
+            attributes: {
+              exclude: [`passwordHash`]
+            }
+          }
+        ]
+      });
     }
     return this._Article.findByPk(id, {include});
   }

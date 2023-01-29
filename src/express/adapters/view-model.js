@@ -14,11 +14,19 @@ const enrichCategoryCount = (partialCategories, totalCategories) => {
   return categories;
 };
 
-const commentConverter = (comment) =>
-  (Object.assign(comment, {
+const commentConverter = (comment) => {
+  const viewComment = Object.assign(comment, {
     createdDateHuman: parseDate(comment.createdAt, DATE_PATTERN.humanReadable),
-    createdDateRobot: parseDate(comment.createdAt, DATE_PATTERN.robotReadable)
-  }));
+    createdDateRobot: parseDate(comment.createdAt, DATE_PATTERN.robotReadable),
+  });
+
+  if (comment.users) {
+    viewComment.name = comment.users.name;
+    viewComment.avatar = comment.users.avatar;
+  }
+
+  return viewComment;
+};
 
 const convertViewArticle = (article, totalCategories) => {
   const viewArticle = Object.assign(article, {
@@ -29,7 +37,7 @@ const convertViewArticle = (article, totalCategories) => {
   });
 
   if (article.image) {
-    viewArticle.image = `img/${article.image}`;
+    viewArticle.image = `/img/${article.image}`;
   }
 
   if (totalCategories) {
@@ -41,14 +49,15 @@ const convertViewArticle = (article, totalCategories) => {
 
 const convertViewArticles = (articles) => articles.map((singleArticle) => convertViewArticle(singleArticle));
 
-const parseViewArticle = (body, file) => {
+const parseViewArticle = (body, file, user) => {
   const articleData = {
-    image: file ? file.filename : ``,
-    createdAt: parseDate(body.date, DATE_PATTERN.default, DATE_PATTERN.dateReverse),
+    image: file ? file.filename : undefined,
+    updatedAt: parseDate(body.date, DATE_PATTERN.default, DATE_PATTERN.dateReverse),
     announce: body.announcement,
     text: body[`full-text`],
     title: body.title,
     categories: ensureArray(body.category),
+    userId: user.id,
   };
 
   return articleData;
