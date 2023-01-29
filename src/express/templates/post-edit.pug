@@ -15,9 +15,9 @@ block content
                   .new-publication__date-block
                     label(for='new-publication-date' aria-label='Календарь')
                     input#new-publication-date(type='text' name='date' placeholder='2019-03-21' value=article.createdDateReverse)
-              +insertErrorMessage(validationMessages)
+              +insertErrorMessages(validationMessages)
               button.new-publication__button.button.button--colored(type='submit') Опубликовать
-            a.popup__button.button.button--popup-close(aria-label='Закрыть окно') Закрыть окно
+            a.popup__button.button.button--popup-close(aria-label='Закрыть окно' href='/') Закрыть окно
             .new-publication__form.form
               .form__wrapper.form__wrapper--intro
                 .form__field

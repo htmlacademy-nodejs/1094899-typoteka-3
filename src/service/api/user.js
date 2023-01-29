@@ -14,7 +14,6 @@ module.exports = (app, service) => {
 
   route.post(`/`, userValidator(service), async (req, res) => {
     const data = req.body;
-
     data.passwordHash = await passwordUtils.hash(data.password);
 
     const result = await service.create(data);

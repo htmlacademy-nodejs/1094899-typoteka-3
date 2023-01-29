@@ -20,7 +20,7 @@ class API {
     return response.data;
   }
 
-  getArticles({offset, limit, comments, categoryId}) {
+  getArticles({offset, limit, comments, categoryId} = {}) {
     return this._load(`/articles`, {params: {offset, limit, comments, categoryId}});
   }
 
@@ -36,9 +36,29 @@ class API {
     return this._load(`/category`, {params: {count}});
   }
 
+  createCategory(data) {
+    return this._load(`/category`, {
+      method: HttpMethod.POST,
+      data
+    });
+  }
+
+  editCategory(categoryId, data) {
+    return this._load(`/category/${categoryId}`, {
+      method: HttpMethod.PUT,
+      data
+    });
+  }
+
+  deleteCategory(categoryId) {
+    return this._load(`/category/${categoryId}`, {
+      method: HttpMethod.DELETE,
+    });
+  }
+
   createArticle(data) {
     return this._load(`/articles`, {
-      method: `POST`,
+      method: HttpMethod.POST,
       data
     });
   }
@@ -57,7 +77,20 @@ class API {
     });
   }
 
-  async auth(email, password) {
+  deleteComment({commentId, articleId}) {
+    return this._load(`/articles/${articleId}/comments/${commentId}`, {
+      method: HttpMethod.DELETE,
+    });
+  }
+
+  createUser(data) {
+    return this._load(`/user`, {
+      method: HttpMethod.POST,
+      data
+    });
+  }
+
+  auth(email, password) {
     return this._load(`/user/auth`, {
       method: HttpMethod.POST,
       data: {email, password}

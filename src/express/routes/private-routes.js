@@ -33,4 +33,44 @@ privateRouter.get(`/comments`, auth, async (req, res) => {
   });
 });
 
+privateRouter.post(`/comments/delete`, auth, async (req, res) => {
+  const {id, articleId} = req.body;
+  try {
+    await api.deleteComment({commentId: id, articleId});
+    res.redirect(`/my/comments`);
+  } catch (e) {
+    res.render(`500`);
+  }
+});
+
+privateRouter.post(`/categories/delete`, auth, async (req, res) => {
+  const {id} = req.body;
+  try {
+    await api.deleteCategory(id);
+    res.redirect(`/my/categories`);
+  } catch (e) {
+    res.render(`500`);
+  }
+});
+
+privateRouter.post(`/categories/add`, auth, async (req, res) => {
+  const {name} = req.body;
+  try {
+    await api.createCategory({name});
+    res.redirect(`/my/categories`);
+  } catch (e) {
+    res.render(`500`);
+  }
+});
+
+privateRouter.post(`/categories/edit`, auth, async (req, res) => {
+  const {id, name} = req.body;
+  try {
+    await api.editCategory(id, {name});
+    res.redirect(`/my/categories`);
+  } catch (e) {
+    res.render(`500`);
+  }
+});
+
 module.exports = privateRouter;

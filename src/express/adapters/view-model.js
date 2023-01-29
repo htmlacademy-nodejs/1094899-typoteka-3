@@ -14,11 +14,19 @@ const enrichCategoryCount = (partialCategories, totalCategories) => {
   return categories;
 };
 
-const commentConverter = (comment) =>
-  (Object.assign(comment, {
+const commentConverter = (comment) => {
+  const viewComment = Object.assign(comment, {
     createdDateHuman: parseDate(comment.createdAt, DATE_PATTERN.humanReadable),
-    createdDateRobot: parseDate(comment.createdAt, DATE_PATTERN.robotReadable)
-  }));
+    createdDateRobot: parseDate(comment.createdAt, DATE_PATTERN.robotReadable),
+  });
+
+  if (comment.users) {
+    viewComment.name = comment.users.name;
+    viewComment.avatar = comment.users.avatar;
+  }
+
+  return viewComment;
+};
 
 const convertViewArticle = (article, totalCategories) => {
   const viewArticle = Object.assign(article, {

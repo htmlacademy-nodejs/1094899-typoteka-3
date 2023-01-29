@@ -9,7 +9,7 @@ block content
           li.notes__list-item
             time.notes__item-time(datetime=article.createdDateRobot) #{article.createdDateHuman}
             a.notes__item-text(href=`/articles/edit/${article.id}`) #{article.title}
-            form(action='/my/delete' method='POST')
-              input(type='hidden' name=`articleId` value=article.id)
+            form(action='/my/articles/delete' method='POST')
+              input(type='hidden' name=`id` value=article.id)
               button.notes__button.button.button--close-item(type='submit')
                 span.visually-hidden Удалить

@@ -129,11 +129,12 @@ articleRouter.get(`/:id`, csrfProtection, async (req, res) => {
 articleRouter.post(`/:id/comments`, auth, csrfProtection, async (req, res) => {
   const {user} = req.session;
   const {id} = req.params;
-  const {comment} = req.body;
+  const {message} = req.body;
   try {
-    await api.createComment(id, {userId: user.id, text: comment});
+    await api.createComment(id, {userId: user.id, text: message});
     res.redirect(`/articles/${id}#comments`);
   } catch (errors) {
+    console.dir(errors);
     const validationMessages = prepareErrors(errors);
     const [article, totalCategories] = await getViewArticleData(id, true);
     res.render(`post-detail`, {

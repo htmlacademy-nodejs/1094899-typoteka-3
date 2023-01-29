@@ -18,7 +18,6 @@ const DEFAULT_PORT = 8080;
 const PUBLIC_DIR = `public`;
 const UPLOAD_DIR = `upload`;
 
-
 const logger = getLogger({name: `frontend`});
 
 const app = express();
@@ -32,7 +31,7 @@ if (!SESSION_SECRET) {
 const mySessionStore = new SequelizeStore({
   db: sequelize,
   expiration: 180000,
-  checkExpirationInterval: 60000
+  checkExpirationInterval: 60000,
 });
 
 sequelize.sync({force: false});
@@ -68,7 +67,7 @@ app.use((req, res) => {
   if (isDevMode) {
     console.error(`Неверный путь: ${req.method} ${req.originalUrl}`);
   }
-  res.status(400).render(`errors/404`);
+  res.status(404).render(`errors/404`);
 });
 
 app.use((err, _req, res, _next) => {
