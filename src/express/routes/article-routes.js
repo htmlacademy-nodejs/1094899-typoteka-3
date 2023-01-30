@@ -109,6 +109,10 @@ articleRouter.get(`/category/:id`, async (req, res) => {
 });
 
 articleRouter.get(`/:id`, csrfProtection, async (req, res) => {
+  console.log(1234);
+  console.dir(req.originalUrl); // '/admin/new?sort=desc'
+  console.dir(req.baseUrl); // '/admin'
+  console.log(req.get(`Referrer`));
   const {user} = req.session;
   const {id} = req.params;
   const [article, totalCategories] = await getViewArticleData(id, true);
@@ -118,6 +122,7 @@ articleRouter.get(`/:id`, csrfProtection, async (req, res) => {
     id,
     user,
     csrfToken: req.csrfToken(),
+    referrer: req.get(`Referrer`) || req.baseUrl,
   });
 });
 
