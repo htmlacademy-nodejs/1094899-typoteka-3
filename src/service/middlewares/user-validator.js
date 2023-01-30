@@ -1,7 +1,7 @@
 'use strict';
 
 const Joi = require(`joi`);
-const {ErrorRegisterMessage, HTTP_CODE} = require(`../../constants`);
+const {ErrorRegisterMessage, HttpCode} = require(`../../constants`);
 
 const schema = Joi.object({
   name: Joi.string().pattern(/[^0-9$&+,:;=?@#|'<>.^*()%!]+$/).required().messages({
@@ -26,14 +26,14 @@ module.exports = (service) => async (req, res, next) => {
   const {error} = schema.validate(newUser, {abortEarly: false});
 
   if (error) {
-    return res.status(HTTP_CODE.clientError)
+    return res.status(HttpCode.CLIENT_ERROR)
       .send(error.details.map((err) => err.message).join(`\n`));
   }
 
   const userByEmail = await service.findByEmail(req.body.email);
 
   if (userByEmail) {
-    return res.status(HTTP_CODE.clientError)
+    return res.status(HttpCode.CLIENT_ERROR)
       .send(ErrorRegisterMessage.EMAIL_EXIST);
   }
 

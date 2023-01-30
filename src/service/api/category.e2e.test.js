@@ -8,7 +8,7 @@ const initDB = require(`../lib/init-db`);
 const passwordUtils = require(`../lib/password`);
 const categoryRoute = require(`./category`);
 const DataService = require(`../data-service/category`);
-const {HTTP_CODE} = require(`../../constants`);
+const {HttpCode} = require(`../../constants`);
 
 const categoriesMock = [
   `Железо`,
@@ -77,7 +77,7 @@ describe(`API returns category list`, () => {
       .get(`/category`);
   });
 
-  test(`Status code 200`, () => expect(response.statusCode).toBe(HTTP_CODE.ok));
+  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.ok));
   test(`Returns list of categories`, () => expect(response.body.length).toBe(4));
 
   test(`Category names are "Железо", "За жизнь", "Разное", "Музыка"`,

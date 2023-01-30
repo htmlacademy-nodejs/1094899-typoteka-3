@@ -9,7 +9,7 @@ const passwordUtils = require(`../lib/password`);
 const userRouter = require(`./user`);
 const UserService = require(`../data-service/user`);
 
-const {HTTP_CODE} = require(`../../constants`);
+const {HttpCode} = require(`../../constants`);
 
 const categoriesMock = [
   `Музыка`,
@@ -122,5 +122,5 @@ describe(`API creates user if data is valid`, () => {
       .send(validUserData);
   });
 
-  test(`Status code 201`, () => expect(response.statusCode).toBe(HTTP_CODE.successSilent));
+  test(`Status code 201`, () => expect(response.statusCode).toBe(HttpCode.SUCCESS_SILENT));
 });

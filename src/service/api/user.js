@@ -1,7 +1,7 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {HTTP_CODE, ErrorAuthMessage} = require(`../../constants`);
+const {HttpCode, ErrorAuthMessage} = require(`../../constants`);
 
 const userValidator = require(`../middlewares/user-validator`);
 
@@ -20,7 +20,7 @@ module.exports = (app, service) => {
 
     delete result.passwordHash;
 
-    res.status(HTTP_CODE.successSilent)
+    res.status(HttpCode.SUCCESS_SILENT)
       .json(result);
   });
 
@@ -29,7 +29,7 @@ module.exports = (app, service) => {
     const user = await service.findByEmail(email);
 
     if (!user) {
-      res.status(HTTP_CODE.notAuthorized).send(ErrorAuthMessage.EMAIL);
+      res.status(HttpCode.NOT_AUTHORIZED).send(ErrorAuthMessage.EMAIL);
       return;
     }
 
@@ -37,9 +37,9 @@ module.exports = (app, service) => {
 
     if (passwordIsCorrect) {
       delete user.passwordHash;
-      res.status(HTTP_CODE.ok).json(user);
+      res.status(HttpCode.OK).json(user);
     } else {
-      res.status(HTTP_CODE.notAuthorized).send(ErrorAuthMessage.PASSWORD);
+      res.status(HttpCode.NOT_AUTHORIZED).send(ErrorAuthMessage.PASSWORD);
     }
   });
 };
