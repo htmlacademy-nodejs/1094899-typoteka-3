@@ -7,7 +7,7 @@ const {Server} = require(`socket.io`);
 const articleRoutes = require(`./routes/article-routes`);
 const privateRoutes = require(`./routes/private-routes`);
 const mainRoutes = require(`./routes/main-routes`);
-const {Env} = require(`../constants`);
+const {Env, HttpCode} = require(`../constants`);
 const {getLogger} = require(`../service/lib/logger`);
 
 const session = require(`express-session`);
@@ -73,14 +73,14 @@ app.use((req, res) => {
   if (isDevMode) {
     console.error(`Неверный путь: ${req.method} ${req.originalUrl}`);
   }
-  res.status(404).render(`errors/404`);
+  res.status(HttpCode.NOT_FOUND).render(`errors/404`);
 });
 
 app.use((err, _req, res, _next) => {
   if (isDevMode) {
     console.error(err);
   }
-  res.status(500).render(`errors/500`);
+  res.status(HttpCode.SERVER_ERROR).render(`errors/500`);
 });
 
 app.set(`views`, path.resolve(__dirname, `templates`));
