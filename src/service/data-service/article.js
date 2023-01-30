@@ -1,5 +1,6 @@
 'use strict';
 
+const Sequelize = require(`sequelize`);
 const Aliase = require(`../models/aliase`);
 
 class ArticleService {
@@ -83,6 +84,39 @@ class ArticleService {
       });
     }
     return this._Article.findByPk(id, {include});
+  }
+
+  async findTopCommented(limit) {
+    const result = await this._Article.findAll({
+      attributes: [
+        `Article.id`,
+        [`announce`, `text`],
+        [
+          Sequelize.fn(
+              `COUNT`,
+              Sequelize.col(`comments.id`)
+          ),
+          `count`
+        ]
+      ],
+      include: [{
+        model: this._Comment,
+        as: Aliase.COMMENTS,
+        attributes: [],
+      }],
+      group: [`Article.id`, `Article.text`],
+      order: [
+        [`count`, `DESC`]
+      ],
+      limit,
+      subQuery: false,
+      having: Sequelize.where(Sequelize.fn(`count`, Sequelize.col(`comments.id`)), {
+        [Sequelize.Op.gt]: 0,
+      }),
+      raw: true
+    });
+
+    return result;
   }
 
   async update(id, article) {

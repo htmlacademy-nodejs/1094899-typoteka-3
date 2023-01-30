@@ -28,6 +28,14 @@ class API {
     return this._load(`/articles/${id}`, {params: {comments}});
   }
 
+  getTopArticles(limit) {
+    return this._load(`/articles/top/${limit}`);
+  }
+
+  getTopComments(limit) {
+    return this._load(`/articles/top/comments/${limit}`);
+  }
+
   search(query) {
     return this._load(`/search`, {params: {query}});
   }

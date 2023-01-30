@@ -49,6 +49,17 @@ const convertViewArticle = (article, totalCategories) => {
 
 const convertViewArticles = (articles) => articles.map((singleArticle) => convertViewArticle(singleArticle));
 
+const convertViewTopText = (textWrappers, limitText) => textWrappers.map((textWrapper) => {
+  if (textWrapper.text.length > limitText) {
+    return {
+      ...textWrapper,
+      text: `${textWrapper.text.substring(0, limitText)}...`
+    };
+  }
+
+  return textWrapper;
+});
+
 const parseViewArticle = (body, file, user) => {
   const articleData = {
     image: file ? file.filename : undefined,
@@ -67,5 +78,6 @@ module.exports = {
   convertViewArticle,
   convertViewArticles,
   parseViewArticle,
-  enrichCategoryCount
+  enrichCategoryCount,
+  convertViewTopText,
 };

@@ -73,3 +73,6 @@ module.exports.ErrorAuthMessage = {
 };
 
 module.exports.ARTICLES_PER_PAGE = 8;
+module.exports.TOP_ARTICLES = 4;
+module.exports.TOP_COMMENTS = 4;
+module.exports.TOP_LIMIT_TEXT = 100;

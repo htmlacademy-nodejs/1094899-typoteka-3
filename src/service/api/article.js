@@ -107,4 +107,22 @@ module.exports = (app, articleService, commentService) => {
     return res.status(HTTP_CODE.created)
       .json(comment);
   });
+
+  /** получить топ самых комментируемых статей */
+  route.get(`/top/:limit`, async (req, res) => {
+    const {limit} = req.params;
+    const result = await articleService.findTopCommented(limit);
+
+    return res.status(HTTP_CODE.ok)
+      .json(result);
+  });
+
+  /** получить последние комментарии комментируемых */
+  route.get(`/top/comments/:limit`, async (req, res) => {
+    const {limit} = req.params;
+    const result = await commentService.findLast(limit);
+
+    return res.status(HTTP_CODE.ok)
+        .json(result);
+  });
 };
