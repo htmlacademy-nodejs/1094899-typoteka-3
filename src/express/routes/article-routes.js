@@ -6,6 +6,7 @@ const api = require(`../api`).getAPI();
 const upload = require(`../middlewares/upload`);
 const {prepareErrors} = require(`../../utils/error`);
 const auth = require(`../middlewares/auth`);
+const adminAuth = require(`../middlewares/admin-auth`);
 const csrf = require(`csurf`);
 
 const csrfProtection = csrf();
@@ -31,7 +32,7 @@ const getViewArticleData = async (articleId, comments) => {
   return [article, totalCategories];
 };
 
-articleRouter.get(`/edit/:id`, auth, csrfProtection, async (req, res) => {
+articleRouter.get(`/edit/:id`, adminAuth, csrfProtection, async (req, res) => {
   const {user} = req.session;
   const {id} = req.params;
   const [article, categories] = await getEditArticleData(id);
@@ -44,7 +45,7 @@ articleRouter.get(`/edit/:id`, auth, csrfProtection, async (req, res) => {
   });
 });
 
-articleRouter.post(`/edit/:id`, auth, upload.single(`upload`), csrfProtection, async (req, res) => {
+articleRouter.post(`/edit/:id`, adminAuth, upload.single(`upload`), csrfProtection, async (req, res) => {
   const {user} = req.session;
   const {body, file} = req;
   const {id} = req.params;
@@ -66,14 +67,14 @@ articleRouter.post(`/edit/:id`, auth, upload.single(`upload`), csrfProtection, a
   }
 });
 
-articleRouter.get(`/add`, auth, csrfProtection, async (req, res) => {
+articleRouter.get(`/add`, adminAuth, csrfProtection, async (req, res) => {
   const {user} = req.session;
   const categories = await getAddArticleData();
 
   res.render(`post-new`, {categories, user, csrfToken: req.csrfToken()});
 });
 
-articleRouter.post(`/add`, auth, upload.single(`upload`), csrfProtection, async (req, res) => {
+articleRouter.post(`/add`, adminAuth, upload.single(`upload`), csrfProtection, async (req, res) => {
   const {user} = req.session;
   const {body, file} = req;
   const articleData = parseViewArticle(body, file, user);
