@@ -1,7 +1,7 @@
 'use strict';
 
 const Joi = require(`joi`);
-const {HTTP_CODE, ErrorArticleMessage} = require(`../../constants`);
+const {HttpCode, ErrorArticleMessage} = require(`../../constants`);
 
 const schema = Joi.object({
   title: Joi.string().min(10).max(100).required().messages({
@@ -34,7 +34,7 @@ module.exports = (req, res, next) => {
   const {error} = schema.validate(newArticle, {abortEarly: false});
 
   if (error) {
-    return res.status(HTTP_CODE.clientError)
+    return res.status(HttpCode.CLIENT_ERROR)
       .send(error.details.map((err) => err.message).join(`\n`));
   }
 

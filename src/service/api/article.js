@@ -1,7 +1,7 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {HTTP_CODE} = require(`../../constants`);
+const {HttpCode} = require(`../../constants`);
 const articleValidator = require(`../middlewares/article-validator`);
 const articleExist = require(`../middlewares/article-exists`);
 const commentValidator = require(`../middlewares/comment-validator`);
@@ -21,7 +21,7 @@ module.exports = (app, articleService, commentService) => {
     } else {
       result = await articleService.findAll({categoryId, needComments: comments});
     }
-    res.status(HTTP_CODE.ok).json(result);
+    res.status(HttpCode.OK).json(result);
   });
 
   /** возвращает полную информацию о публикации */
@@ -32,18 +32,18 @@ module.exports = (app, articleService, commentService) => {
     const article = await articleService.findOne(articleId, comments);
 
     if (!article) {
-      return res.status(HTTP_CODE.notFound)
+      return res.status(HttpCode.NOT_FOUND)
         .send(`Not found with ${articleId}`);
     }
 
-    return res.status(HTTP_CODE.ok)
+    return res.status(HttpCode.OK)
       .json(article);
   });
 
   /** создаёт новую публикацию */
   route.post(`/`, articleValidator, async (req, res) => {
     const article = await articleService.create(req.body);
-    return res.status(HTTP_CODE.created)
+    return res.status(HttpCode.CREATED)
       .json(article);
   });
 
@@ -53,12 +53,12 @@ module.exports = (app, articleService, commentService) => {
     const existArticle = await articleService.findOne(articleId);
 
     if (!existArticle) {
-      return res.status(HTTP_CODE.notFound)
+      return res.status(HttpCode.NOT_FOUND)
         .send(`Not found with ${articleId}`);
     }
     const updatedArticle = await articleService.update(articleId, req.body);
 
-    return res.status(HTTP_CODE.ok)
+    return res.status(HttpCode.OK)
       .json(updatedArticle);
   });
 
@@ -68,11 +68,11 @@ module.exports = (app, articleService, commentService) => {
     const article = await articleService.drop(articleId);
 
     if (!article) {
-      return res.status(HTTP_CODE.notFound)
+      return res.status(HttpCode.NOT_FOUND)
         .send(`Not found`);
     }
 
-    return res.status(HTTP_CODE.ok)
+    return res.status(HttpCode.OK)
       .json(article);
   });
 
@@ -81,7 +81,7 @@ module.exports = (app, articleService, commentService) => {
     const {article} = res.locals;
     const comments = await commentService.findAll(article.id);
 
-    res.status(HTTP_CODE.ok)
+    res.status(HttpCode.OK)
       .json(comments);
   });
 
@@ -91,11 +91,11 @@ module.exports = (app, articleService, commentService) => {
     const deletedComment = await commentService.drop(commentId);
 
     if (!deletedComment) {
-      return res.status(HTTP_CODE.notFound)
+      return res.status(HttpCode.NOT_FOUND)
         .send(`Not found`);
     }
 
-    return res.status(HTTP_CODE.ok)
+    return res.status(HttpCode.OK)
       .json(deletedComment);
   });
 
@@ -104,7 +104,7 @@ module.exports = (app, articleService, commentService) => {
     const {article} = res.locals;
     const comment = await commentService.create(article.id, req.body);
 
-    return res.status(HTTP_CODE.created)
+    return res.status(HttpCode.CREATED)
       .json(comment);
   });
 
@@ -113,7 +113,7 @@ module.exports = (app, articleService, commentService) => {
     const {limit} = req.params;
     const result = await articleService.findTopCommented(limit);
 
-    return res.status(HTTP_CODE.ok)
+    return res.status(HttpCode.OK)
       .json(result);
   });
 
@@ -122,7 +122,7 @@ module.exports = (app, articleService, commentService) => {
     const {limit} = req.params;
     const result = await commentService.findLast(limit);
 
-    return res.status(HTTP_CODE.ok)
+    return res.status(HttpCode.OK)
         .json(result);
   });
 };

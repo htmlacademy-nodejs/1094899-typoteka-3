@@ -3,23 +3,24 @@
 module.exports.DEFAULT_COMMAND = `--help`;
 module.exports.USER_ARGV_INDEX = 2;
 module.exports.API_PREFIX = `/api`;
-module.exports.HTTP_CODE = {
-  ok: 200,
-  created: 201,
-  successSilent: 204,
-  clientError: 400,
-  notAuthorized: 401,
-  notFound: 404,
-  serverError: 500
-};
-module.exports.ExitCode = {
-  error: 1,
-  success: 0,
+
+module.exports.HttpCode = {
+  OK: 200,
+  CREATED: 201,
+  SUCCESS_SILENT: 204,
+  CLIENT_ERROR: 400,
+  NOT_AUTHORIZED: 401,
+  NOT_FOUND: 404,
+  SERVER_ERROR: 500
 };
 
-/** @type {Record<string, BufferEncoding} */
+module.exports.ExitCode = {
+  ERROR: 1,
+  SUCCESS: 0,
+};
+
 module.exports.Encoding = {
-  utf8: `utf-8`,
+  UTF8: `utf-8`,
 };
 
 module.exports.Env = {
@@ -27,12 +28,12 @@ module.exports.Env = {
   PRODUCTION: `production`
 };
 
-module.exports.DATE_PATTERN = {
-  default: `YYYY-MM-DDTHH:mm:ss`,
-  humanReadable: `DD.MM.YYYY, HH:mm`,
-  robotReadable: `YYYY-MM-DDTHH:mm`,
-  dateReverse: `YYYY-MM-DD`,
-  dateOnly: `DD.MM.YYYY`,
+module.exports.DatePattern = {
+  DEFAULT: `YYYY-MM-DDTHH:mm:ss`,
+  HUMAN_READABLE: `DD.MM.YYYY, HH:mm`,
+  ROBOT_READABLE: `YYYY-MM-DDTHH:mm`,
+  DATE_REVERSE: `YYYY-MM-DD`,
+  DATE_ONLY: `DD.MM.YYYY`,
 };
 
 module.exports.HttpMethod = {

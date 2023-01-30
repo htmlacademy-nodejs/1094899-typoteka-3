@@ -56,7 +56,7 @@ module.exports = {
 
     if (countArticle > TOTAL_MOCK_LIMIT) {
       logger.error(`Не больше ${TOTAL_MOCK_LIMIT} публикаций`);
-      process.exit(ExitCode.error);
+      process.exit(ExitCode.ERROR);
     }
 
     try {

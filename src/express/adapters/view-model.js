@@ -1,6 +1,6 @@
 'use strict';
 
-const {DATE_PATTERN} = require(`../../constants`);
+const {DatePattern} = require(`../../constants`);
 const {parseDate} = require(`../../utils/date`);
 const {ensureArray} = require(`../../utils/common`);
 
@@ -16,8 +16,8 @@ const enrichCategoryCount = (partialCategories, totalCategories) => {
 
 const commentConverter = (comment) => {
   const viewComment = Object.assign(comment, {
-    createdDateHuman: parseDate(comment.createdAt, DATE_PATTERN.humanReadable),
-    createdDateRobot: parseDate(comment.createdAt, DATE_PATTERN.robotReadable),
+    createdDateHuman: parseDate(comment.createdAt, DatePattern.HUMAN_READABLE),
+    createdDateRobot: parseDate(comment.createdAt, DatePattern.ROBOT_READABLE),
   });
 
   if (comment.users) {
@@ -30,9 +30,9 @@ const commentConverter = (comment) => {
 
 const convertViewArticle = (article, totalCategories) => {
   const viewArticle = Object.assign(article, {
-    createdDateHuman: parseDate(article.createdAt, DATE_PATTERN.humanReadable),
-    createdDateRobot: parseDate(article.createdAt, DATE_PATTERN.robotReadable),
-    createdDateReverse: parseDate(article.createdAt, DATE_PATTERN.dateReverse),
+    createdDateHuman: parseDate(article.createdAt, DatePattern.HUMAN_READABLE),
+    createdDateRobot: parseDate(article.createdAt, DatePattern.ROBOT_READABLE),
+    createdDateReverse: parseDate(article.createdAt, DatePattern.DATE_REVERSE),
     comments: article.comments ? article.comments.map(commentConverter) : []
   });
 
@@ -63,7 +63,7 @@ const convertViewTopText = (textWrappers, limitText) => textWrappers.map((textWr
 const parseViewArticle = (body, file, user) => {
   const articleData = {
     image: file ? file.filename : undefined,
-    updatedAt: parseDate(body.date, DATE_PATTERN.default, DATE_PATTERN.dateReverse),
+    updatedAt: parseDate(body.date, DatePattern.DEFAULT, DatePattern.DATE_REVERSE),
     announce: body.announcement,
     text: body[`full-text`],
     title: body.title,
