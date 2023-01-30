@@ -40,8 +40,8 @@ const generateComments = (count, comments, users) => (
 const generateArticles = (count, titles, categories, announces, comments, users) => (
   Array.from({length: count}, () => ({
     title: titles[getRandomInt(0, titles.length - 1)],
-    announce: shuffle(announces).slice(1, getRandomInt(1, MAX_ANNOUNCE_COUNT)).join(` `),
-    text: shuffle(announces).slice(1, getRandomInt(1, announces.length - 1)).join(` `),
+    announce: shuffle(announces).slice(0, getRandomInt(1, MAX_ANNOUNCE_COUNT)).join(` `),
+    text: shuffle(announces).slice(0, getRandomInt(1, announces.length - 1)).join(` `),
     categories: shuffle(categories).slice(1, getRandomInt(1, categories.length - 1)),
     comments: generateComments(getRandomInt(1, MAX_COMMENTS), comments, users),
     user: users[getRandomInt(0, users.length - 1)].email,
