@@ -57,4 +57,10 @@ privateRouter.post(`/categories/edit`, adminAuth, async (req, res) => {
   res.redirect(`/my/categories`);
 });
 
+privateRouter.post(`/articles/delete`, adminAuth, async (req, res) => {
+  const {id} = req.body;
+  await api.deleteArticle(id);
+  res.redirect(`/my`);
+});
+
 module.exports = privateRouter;
