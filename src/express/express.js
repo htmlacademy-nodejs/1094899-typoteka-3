@@ -2,6 +2,8 @@
 
 const express = require(`express`);
 const path = require(`path`);
+const http = require(`http`);
+const {Server} = require(`socket.io`);
 const articleRoutes = require(`./routes/article-routes`);
 const privateRoutes = require(`./routes/private-routes`);
 const mainRoutes = require(`./routes/main-routes`);
@@ -21,6 +23,10 @@ const UPLOAD_DIR = `upload`;
 const logger = getLogger({name: `frontend`});
 
 const app = express();
+const server = http.createServer(app);
+
+const io = new Server(server);
+app.locals.socketio = io;
 
 const {SESSION_SECRET} = process.env;
 
@@ -80,4 +86,4 @@ app.use((err, _req, res, _next) => {
 app.set(`views`, path.resolve(__dirname, `templates`));
 app.set(`view engine`, `pug`);
 
-app.listen(process.env.PORT || DEFAULT_PORT);
+server.listen(process.env.PORT || DEFAULT_PORT);

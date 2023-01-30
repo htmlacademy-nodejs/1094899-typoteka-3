@@ -1,13 +1,14 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {convertViewArticle, parseViewArticle, convertViewArticles} = require(`../adapters/view-model`);
+const {convertViewArticle, parseViewArticle, convertViewArticles, convertViewTopText} = require(`../adapters/view-model`);
 const api = require(`../api`).getAPI();
 const upload = require(`../middlewares/upload`);
 const {prepareErrors} = require(`../../utils/error`);
 const auth = require(`../middlewares/auth`);
 const adminAuth = require(`../middlewares/admin-auth`);
 const csrf = require(`csurf`);
+const {TOP_ARTICLES, TOP_COMMENTS, TOP_LIMIT_TEXT} = require(`../../constants`);
 
 const csrfProtection = csrf();
 const articleRouter = new Router();
@@ -30,6 +31,24 @@ const getViewArticleData = async (articleId, comments) => {
     api.getCategories(true)
   ]);
   return [article, totalCategories];
+};
+
+const newCommentHandler = async (req) => {
+  const [
+    topArticles,
+    topComments,
+  ] = await Promise.all([
+    api.getTopArticles(TOP_ARTICLES),
+    api.getTopComments(TOP_COMMENTS),
+  ]);
+
+  const data = {
+    topArticles: convertViewTopText(topArticles, TOP_LIMIT_TEXT),
+    topComments: convertViewTopText(topComments, TOP_LIMIT_TEXT),
+  };
+
+  const io = req.app.locals.socketio;
+  io.emit(`comment:create`, data);
 };
 
 articleRouter.get(`/edit/:id`, adminAuth, csrfProtection, async (req, res) => {
@@ -129,6 +148,7 @@ articleRouter.post(`/:id/comments`, auth, csrfProtection, async (req, res) => {
   const {message} = req.body;
   try {
     await api.createComment(id, {userId: user.id, text: message});
+    newCommentHandler(req);
     res.redirect(`/articles/${id}#comments`);
   } catch (errors) {
     const validationMessages = prepareErrors(errors);
