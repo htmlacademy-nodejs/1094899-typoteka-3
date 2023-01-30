@@ -4,9 +4,9 @@ const {Router} = require(`express`);
 const privateRouter = new Router();
 const api = require(`../api`).getAPI();
 const {convertViewArticles} = require(`../adapters/view-model`);
-const auth = require(`../middlewares/auth`);
+const adminAuth = require(`../middlewares/admin-auth`);
 
-privateRouter.get(`/`, auth, async (req, res) => {
+privateRouter.get(`/`, adminAuth, async (req, res) => {
   const {user} = req.session;
   const articles = await api.getArticles();
   res.render(`my-posts`, {
@@ -15,7 +15,7 @@ privateRouter.get(`/`, auth, async (req, res) => {
   });
 });
 
-privateRouter.get(`/categories`, auth, async (req, res) => {
+privateRouter.get(`/categories`, adminAuth, async (req, res) => {
   const {user} = req.session;
   const categories = await api.getCategories(true);
   res.render(`all-categories`, {
@@ -24,7 +24,7 @@ privateRouter.get(`/categories`, auth, async (req, res) => {
   });
 });
 
-privateRouter.get(`/comments`, auth, async (req, res) => {
+privateRouter.get(`/comments`, adminAuth, async (req, res) => {
   const {user} = req.session;
   const articles = await api.getArticles({comments: true});
   res.render(`comments`, {
@@ -33,28 +33,34 @@ privateRouter.get(`/comments`, auth, async (req, res) => {
   });
 });
 
-privateRouter.post(`/comments/delete`, auth, async (req, res) => {
+privateRouter.post(`/comments/delete`, adminAuth, async (req, res) => {
   const {id, articleId} = req.body;
   await api.deleteComment({commentId: id, articleId});
   res.redirect(`/my/comments`);
 });
 
-privateRouter.post(`/categories/delete`, auth, async (req, res) => {
+privateRouter.post(`/categories/delete`, adminAuth, async (req, res) => {
   const {id} = req.body;
   await api.deleteCategory(id);
   res.redirect(`/my/categories`);
 });
 
-privateRouter.post(`/categories/add`, auth, async (req, res) => {
+privateRouter.post(`/categories/add`, adminAuth, async (req, res) => {
   const {name} = req.body;
   await api.createCategory({name});
   res.redirect(`/my/categories`);
 });
 
-privateRouter.post(`/categories/edit`, auth, async (req, res) => {
+privateRouter.post(`/categories/edit`, adminAuth, async (req, res) => {
   const {id, name} = req.body;
   await api.editCategory(id, {name});
   res.redirect(`/my/categories`);
+});
+
+privateRouter.post(`/articles/delete`, adminAuth, async (req, res) => {
+  const {id} = req.body;
+  await api.deleteArticle(id);
+  res.redirect(`/my`);
 });
 
 module.exports = privateRouter;

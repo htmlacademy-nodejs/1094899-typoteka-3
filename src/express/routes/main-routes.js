@@ -2,8 +2,8 @@
 
 const {Router} = require(`express`);
 const api = require(`../api`).getAPI();
-const {convertViewArticles} = require(`../adapters/view-model`);
-const {ARTICLES_PER_PAGE} = require(`../../constants`);
+const {convertViewArticles, convertViewTopText} = require(`../adapters/view-model`);
+const {ARTICLES_PER_PAGE, TOP_ARTICLES, TOP_COMMENTS, TOP_LIMIT_TEXT} = require(`../../constants`);
 const upload = require(`../middlewares/upload`);
 const {prepareErrors} = require(`../../utils/error`);
 
@@ -23,10 +23,14 @@ mainRouter.get(`/`, async (req, res) => {
 
   const [
     {count, articles},
-    categories
+    categories,
+    topArticles,
+    topComments,
   ] = await Promise.all([
     api.getArticles({limit, offset, comments: true}),
-    api.getCategories(true)
+    api.getCategories(true),
+    api.getTopArticles(TOP_ARTICLES),
+    api.getTopComments(TOP_COMMENTS),
   ]);
 
   const totalPages = Math.ceil(count / ARTICLES_PER_PAGE);
@@ -38,6 +42,8 @@ mainRouter.get(`/`, async (req, res) => {
     page,
     totalPages,
     user,
+    topArticles: convertViewTopText(topArticles, TOP_LIMIT_TEXT),
+    topComments: convertViewTopText(topComments, TOP_LIMIT_TEXT),
   });
 });
 

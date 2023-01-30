@@ -10,7 +10,7 @@ const articleRouter = require(`./article`);
 const ArticleService = require(`../data-service/article`);
 const CommentService = require(`../data-service/comment`);
 
-const {HTTP_CODE} = require(`../../constants`);
+const {HttpCode} = require(`../../constants`);
 
 const categoriesMock = [
   `Музыка`,
@@ -114,6 +114,6 @@ describe(`API returns a list of all articles`, () => {
       .get(`/articles`);
   });
 
-  test(`Status code 200`, () => expect(response.statusCode).toBe(HTTP_CODE.ok));
+  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
   test(`First article's title is correct`, () => expect(response.body[0].title).toBe(`Что такое осень`));
 });

@@ -20,7 +20,12 @@ const define = (sequelize) => User.init({
   avatar: {
     type: DataTypes.STRING,
     allowNull: false
-  }
+  },
+  isAdmin: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  },
 }, {
   sequelize,
   modelName: `User`,

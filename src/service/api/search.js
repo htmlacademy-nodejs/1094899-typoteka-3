@@ -1,7 +1,7 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {HTTP_CODE} = require(`../../constants`);
+const {HttpCode} = require(`../../constants`);
 
 module.exports = (app, service) => {
   const route = new Router();
@@ -10,12 +10,12 @@ module.exports = (app, service) => {
   route.get(`/`, async (req, res) => {
     const {query = ``} = req.query;
     if (!query) {
-      res.status(HTTP_CODE.clientError).json([]);
+      res.status(HttpCode.CLIENT_ERROR).json([]);
       return;
     }
 
     const searchResults = await service.findAll(query);
-    const searchStatus = searchResults.length > 0 ? HTTP_CODE.ok : HTTP_CODE.notFound;
+    const searchStatus = searchResults.length > 0 ? HttpCode.OK : HttpCode.NOT_FOUND;
 
     res.status(searchStatus)
       .json(searchResults);

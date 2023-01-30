@@ -1,7 +1,7 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {HTTP_CODE} = require(`../../constants`);
+const {HttpCode} = require(`../../constants`);
 
 module.exports = (app, service) => {
   const route = new Router();
@@ -10,7 +10,7 @@ module.exports = (app, service) => {
   route.get(`/`, async (req, res) => {
     const {count} = req.query;
     const categories = await service.findAll(count);
-    res.status(HTTP_CODE.ok)
+    res.status(HttpCode.OK)
       .json(categories);
   });
 
@@ -19,18 +19,18 @@ module.exports = (app, service) => {
     const deletedItem = await service.drop(categoryId);
 
     if (!deletedItem) {
-      return res.status(HTTP_CODE.notFound)
+      return res.status(HttpCode.notFound)
         .send(`Not found`);
     }
 
-    return res.status(HTTP_CODE.ok)
+    return res.status(HttpCode.OK)
       .json(deletedItem);
   });
 
   route.post(`/`, async (req, res) => {
     const category = await service.create(req.body);
 
-    return res.status(HTTP_CODE.created)
+    return res.status(HttpCode.CREATED)
       .json(category);
   });
 
@@ -39,7 +39,7 @@ module.exports = (app, service) => {
     const updatedCategoryCount = await service.update(categoryId, req.body);
 
     return updatedCategoryCount === 0
-      ? res.status(HTTP_CODE.notFound).json(updatedCategoryCount)
-      : res.status(HTTP_CODE.ok).json(updatedCategoryCount);
+      ? res.status(HttpCode.NOT_FOUND).json(updatedCategoryCount)
+      : res.status(HttpCode.OK).json(updatedCategoryCount);
   });
 };

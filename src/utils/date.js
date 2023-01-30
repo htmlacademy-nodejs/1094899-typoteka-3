@@ -2,7 +2,7 @@
 
 const dayjs = require(`dayjs`);
 const customParseFormat = require(`dayjs/plugin/customParseFormat`);
-const {DATE_PATTERN} = require(`../constants`);
+const {DatePattern} = require(`../constants`);
 const {getRandomInt} = require(`./common`);
 dayjs.extend(customParseFormat);
 
@@ -29,10 +29,10 @@ module.exports.humanizeDate = (date) => {
     throw new Error(`${date} не является объектом даты`);
   }
 
-  return dayjs(date).format(DATE_PATTERN.default);
+  return dayjs(date).format(DatePattern.DEFAULT);
 };
 
-module.exports.parseDate = (stringDate, formatFinal, formatOriginal = DATE_PATTERN.default) => {
+module.exports.parseDate = (stringDate, formatFinal, formatOriginal = DatePattern.DEFAULT) => {
 
   const date = dayjs(stringDate, formatOriginal);
   return dayjs(date).format(formatFinal);

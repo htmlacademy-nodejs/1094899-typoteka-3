@@ -7,7 +7,7 @@ const searchRoute = require(`./search`);
 const initDB = require(`../lib/init-db`);
 const passwordUtils = require(`../lib/password`);
 const DataService = require(`../data-service/search`);
-const {HTTP_CODE} = require(`../../constants`);
+const {HttpCode} = require(`../../constants`);
 
 const categoriesMock = [
   `Музыка`,
@@ -99,7 +99,7 @@ describe(`API returns article based on search query`, () => {
       });
   });
 
-  test(`Status code 200`, () => expect(response.statusCode).toBe(HTTP_CODE.ok));
+  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
   test(`1 article found`, () => expect(response.body.length).toBe(1));
   test(`Article has correct title`, () => expect(response.body[0].title).toBe(`Учим HTML и CSS`));
 });
@@ -107,7 +107,7 @@ describe(`API returns article based on search query`, () => {
 test(`API returns 400 when query string is absent`,
     () => request(app)
       .get(`/search`)
-      .expect(HTTP_CODE.clientError)
+      .expect(HttpCode.CLIENT_ERROR)
 );
 
 test(`API returns code 404 if nothing is found`,
@@ -116,5 +116,5 @@ test(`API returns code 404 if nothing is found`,
       .query({
         query: `несуществующее обьявление`
       })
-      .expect(HTTP_CODE.notFound)
+      .expect(HttpCode.NOT_FOUND)
 );

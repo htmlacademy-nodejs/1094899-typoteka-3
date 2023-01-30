@@ -3,7 +3,7 @@
 const express = require(`express`);
 const {getApiRouter} = require(`../api`);
 const {getLogger} = require(`../lib/logger`);
-const {HTTP_CODE, API_PREFIX} = require(`../../constants`);
+const {HttpCode, API_PREFIX} = require(`../../constants`);
 const sequelize = require(`../lib/sequelize`);
 
 const DEFAULT_PORT = 3000;
@@ -29,7 +29,7 @@ const startServer = async (port, logger) => {
   app.use((req, res) => {
     logger.error(`Ошибка 404: ${req.method} ${req.originalUrl}`);
     res
-      .status(HTTP_CODE.notFound)
+      .status(HttpCode.NOT_FOUND)
       .send(`Not found`);
   });
 
