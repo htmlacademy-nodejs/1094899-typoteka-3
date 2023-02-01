@@ -86,4 +86,7 @@ app.use((err, _req, res, _next) => {
 app.set(`views`, path.resolve(__dirname, `templates`));
 app.set(`view engine`, `pug`);
 
-server.listen(process.env.PORT || DEFAULT_PORT);
+const port = process.env.API_PORT || DEFAULT_PORT;
+logger.info(`Принимаю подключения на ${port}`);
+
+server.listen(port);
