@@ -8,10 +8,8 @@ const getSequelize = require(`../lib/sequelize`);
 
 const DEFAULT_PORT = 3000;
 
-let app = null;
-
 const startServer = async (port, logger) => {
-  app = express();
+  const app = express();
 
   app.use(express.json());
 
