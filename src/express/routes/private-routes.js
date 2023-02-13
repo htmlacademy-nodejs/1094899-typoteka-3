@@ -2,9 +2,11 @@
 
 const {Router} = require(`express`);
 const privateRouter = new Router();
-const api = require(`../api`).getAPI();
+const {getAPI} = require(`../api`);
 const {convertViewArticles} = require(`../adapters/view-model`);
 const adminAuth = require(`../middlewares/admin-auth`);
+
+const api = getAPI();
 
 privateRouter.get(`/`, adminAuth, async (req, res) => {
   const {user} = req.session;

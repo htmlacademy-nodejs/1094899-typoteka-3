@@ -5,7 +5,7 @@ const {ExitCode, Encoding} = require(`../../constants`);
 const {getRandomInt, shuffle} = require(`../../utils/common`);
 const {getLogger} = require(`../lib/logger`);
 const passwordUtils = require(`../lib/password`);
-const sequelize = require(`../lib/sequelize`);
+const getSequelize = require(`../lib/sequelize`);
 const initDatabase = require(`../lib/init-db`);
 
 const DEFAULT_COUNT = 1;
@@ -21,7 +21,7 @@ const logger = getLogger({});
 
 const readContent = async (filePath) => {
   try {
-    const content = await fs.readFile(filePath, Encoding.utf8);
+    const content = await fs.readFile(filePath, Encoding.UTF8);
     const collection = content.trim().split(`\n`);
     return collection;
   } catch (err) {
@@ -59,6 +59,7 @@ module.exports = {
       process.exit(ExitCode.ERROR);
     }
 
+    const sequelize = getSequelize();
     try {
       logger.info(`Trying to connect to database...`);
       await sequelize.authenticate();

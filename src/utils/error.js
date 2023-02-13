@@ -1,5 +1,9 @@
 'use strict';
 
-module.exports.prepareErrors = (errors) => {
+const prepareErrors = (errors) => {
   return errors.response.data.split(`\n`);
+};
+
+module.exports = {
+  prepareErrors,
 };

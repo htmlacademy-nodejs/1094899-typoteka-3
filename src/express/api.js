@@ -112,9 +112,18 @@ class API {
   }
 }
 
-const defaultAPI = new API(defaultURL, TIMEOUT);
+let instanceAPI;
+
+const getAPI = () => {
+  if (instanceAPI) {
+    return instanceAPI;
+  }
+
+  instanceAPI = new API(defaultURL, TIMEOUT);
+  return instanceAPI;
+};
 
 module.exports = {
   API,
-  getAPI: () => defaultAPI
+  getAPI,
 };
