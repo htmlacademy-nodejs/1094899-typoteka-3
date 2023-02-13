@@ -11,7 +11,7 @@ const {Env, HttpCode} = require(`../constants`);
 const {getLogger} = require(`../service/lib/logger`);
 
 const session = require(`express-session`);
-const sequelize = require(`../service/lib/sequelize`);
+const getSequelize = require(`../service/lib/sequelize`);
 const SequelizeStore = require(`connect-session-sequelize`)(session.Store);
 
 const isDevMode = process.env.NODE_ENV === Env.DEVELOPMENT;
@@ -33,6 +33,8 @@ const {SESSION_SECRET} = process.env;
 if (!SESSION_SECRET) {
   throw new Error(`SESSION_SECRET environment variable is not defined`);
 }
+
+const sequelize = getSequelize();
 
 const mySessionStore = new SequelizeStore({
   db: sequelize,

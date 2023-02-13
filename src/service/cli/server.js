@@ -4,7 +4,7 @@ const express = require(`express`);
 const {getApiRouter} = require(`../api`);
 const {getLogger} = require(`../lib/logger`);
 const {HttpCode, API_PREFIX} = require(`../../constants`);
-const sequelize = require(`../lib/sequelize`);
+const getSequelize = require(`../lib/sequelize`);
 
 const DEFAULT_PORT = 3000;
 
@@ -59,6 +59,7 @@ module.exports = {
 
     try {
       logger.info(`Trying to connect to database...`);
+      const sequelize = getSequelize();
       await sequelize.authenticate();
     } catch (err) {
       logger.error(`An error occured: ${err.message}`);
