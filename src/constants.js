@@ -1,10 +1,10 @@
 'use strict';
 
-module.exports.DEFAULT_COMMAND = `--help`;
-module.exports.USER_ARGV_INDEX = 2;
-module.exports.API_PREFIX = `/api`;
+const DEFAULT_COMMAND = `--help`;
+const USER_ARGV_INDEX = 2;
+const API_PREFIX = `/api`;
 
-module.exports.HttpCode = {
+const HttpCode = {
   OK: 200,
   CREATED: 201,
   SUCCESS_SILENT: 204,
@@ -14,21 +14,21 @@ module.exports.HttpCode = {
   SERVER_ERROR: 500
 };
 
-module.exports.ExitCode = {
+const ExitCode = {
   ERROR: 1,
   SUCCESS: 0,
 };
 
-module.exports.Encoding = {
+const Encoding = {
   UTF8: `utf-8`,
 };
 
-module.exports.Env = {
+const Env = {
   DEVELOPMENT: `development`,
   PRODUCTION: `production`
 };
 
-module.exports.DatePattern = {
+const DatePattern = {
   DEFAULT: `YYYY-MM-DDTHH:mm:ss`,
   HUMAN_READABLE: `DD.MM.YYYY, HH:mm`,
   ROBOT_READABLE: `YYYY-MM-DDTHH:mm`,
@@ -36,19 +36,19 @@ module.exports.DatePattern = {
   DATE_ONLY: `DD.MM.YYYY`,
 };
 
-module.exports.HttpMethod = {
+const HttpMethod = {
   GET: `GET`,
   POST: `POST`,
   PUT: `PUT`,
   DELETE: `DELETE`
 };
 
-module.exports.ErrorCommentMessage = {
+const ErrorCommentMessage = {
   TEXT: `Комментарий содержит меньше 20 символов`,
   USER_ID: `Некорректный идентификатор пользователя`
 };
 
-module.exports.ErrorArticleMessage = {
+const ErrorArticleMessage = {
   CATEGORIES: `Не выбрана ни одна категория объявления`,
   TITLE_MIN: `Заголовок содержит меньше 10 символов`,
   TITLE_MAX: `Заголовок не может содержать более 100 символов`,
@@ -59,7 +59,7 @@ module.exports.ErrorArticleMessage = {
   USER_ID: `Некорректный идентификатор пользователя`,
 };
 
-module.exports.ErrorRegisterMessage = {
+const ErrorRegisterMessage = {
   NAME: `Имя содержит некорректные символы`,
   EMAIL: `Некорректный электронный адрес`,
   EMAIL_EXIST: `Электронный адрес уже используется`,
@@ -68,12 +68,32 @@ module.exports.ErrorRegisterMessage = {
   AVATAR: `Изображение не выбрано или тип изображения не поддерживается`
 };
 
-module.exports.ErrorAuthMessage = {
+const ErrorAuthMessage = {
   EMAIL: `Электронный адрес не существует`,
   PASSWORD: `Неверный пароль`
 };
 
-module.exports.ARTICLES_PER_PAGE = 8;
-module.exports.TOP_ARTICLES = 4;
-module.exports.TOP_COMMENTS = 4;
-module.exports.TOP_LIMIT_TEXT = 100;
+const ARTICLES_PER_PAGE = 8;
+const TOP_ARTICLES = 4;
+const TOP_COMMENTS = 4;
+const TOP_LIMIT_TEXT = 100;
+
+module.exports = {
+  DEFAULT_COMMAND,
+  USER_ARGV_INDEX,
+  API_PREFIX,
+  HttpCode,
+  ExitCode,
+  Encoding,
+  Env,
+  DatePattern,
+  HttpMethod,
+  ErrorCommentMessage,
+  ErrorArticleMessage,
+  ErrorRegisterMessage,
+  ErrorAuthMessage,
+  ARTICLES_PER_PAGE,
+  TOP_ARTICLES,
+  TOP_COMMENTS,
+  TOP_LIMIT_TEXT,
+};

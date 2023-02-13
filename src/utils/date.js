@@ -6,7 +6,7 @@ const {DatePattern} = require(`../constants`);
 const {getRandomInt} = require(`./common`);
 dayjs.extend(customParseFormat);
 
-module.exports.pickRandomDate = (dayOffset) => {
+const pickRandomDate = (dayOffset) => {
   if (dayOffset === 0) {
     throw new Error(`Сдвиг в днях не может быть нулевым`);
   }
@@ -24,7 +24,7 @@ module.exports.pickRandomDate = (dayOffset) => {
   return new Date(currentDate);
 };
 
-module.exports.humanizeDate = (date) => {
+const humanizeDate = (date) => {
   if (!(date instanceof Date)) {
     throw new Error(`${date} не является объектом даты`);
   }
@@ -32,8 +32,14 @@ module.exports.humanizeDate = (date) => {
   return dayjs(date).format(DatePattern.DEFAULT);
 };
 
-module.exports.parseDate = (stringDate, formatFinal, formatOriginal = DatePattern.DEFAULT) => {
+const parseDate = (stringDate, formatFinal, formatOriginal = DatePattern.DEFAULT) => {
 
   const date = dayjs(stringDate, formatOriginal);
   return dayjs(date).format(formatFinal);
+};
+
+module.exports = {
+  pickRandomDate,
+  humanizeDate,
+  parseDate,
 };
