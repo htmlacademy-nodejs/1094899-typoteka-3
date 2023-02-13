@@ -2,7 +2,7 @@
 
 const {Router} = require(`express`);
 const {convertViewArticle, parseViewArticle, convertViewArticles, convertViewTopText} = require(`../adapters/view-model`);
-const api = require(`../api`).getAPI();
+const {getAPI} = require(`../api`);
 const upload = require(`../middlewares/upload`);
 const {prepareErrors} = require(`../../utils/error`);
 const auth = require(`../middlewares/auth`);
@@ -12,6 +12,7 @@ const {TOP_ARTICLES, TOP_COMMENTS, TOP_LIMIT_TEXT} = require(`../../constants`);
 
 const csrfProtection = csrf();
 const articleRouter = new Router();
+const api = getAPI();
 
 const getAddArticleData = () => {
   return api.getCategories();

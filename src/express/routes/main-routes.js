@@ -1,13 +1,14 @@
 'use strict';
 
 const {Router} = require(`express`);
-const api = require(`../api`).getAPI();
+const {getAPI} = require(`../api`);
 const {convertViewArticles, convertViewTopText} = require(`../adapters/view-model`);
 const {ARTICLES_PER_PAGE, TOP_ARTICLES, TOP_COMMENTS, TOP_LIMIT_TEXT} = require(`../../constants`);
 const upload = require(`../middlewares/upload`);
 const {prepareErrors} = require(`../../utils/error`);
 
 const mainRouter = new Router();
+const api = getAPI();
 
 mainRouter.get(`/`, async (req, res) => {
   const {user} = req.session;
